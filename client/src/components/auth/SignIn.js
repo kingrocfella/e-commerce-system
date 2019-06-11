@@ -34,7 +34,7 @@ class SignIn extends Component {
         //push auth details into redux store
         this.props.setAuthData(authData);
         //redirect to products page if logged in
-        this.props.history.push("/");
+        this.props.history.push("/products");
       })
       .catch(err => {
         this.setState({

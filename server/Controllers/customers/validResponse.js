@@ -23,7 +23,7 @@ module.exports = ({type, token, customer}) => {
         "accessToken": `Bearer ${token}`,
         "expires_in": "24h"
       }
-      break;
+
     case "register":
       return {
         "customer": {
@@ -47,9 +47,8 @@ module.exports = ({type, token, customer}) => {
         "accessToken": `Bearer ${token}`,
         "expires_in": "24h"
       }
-      break;
   
-    default:
+    default: 
       break;
   }
 }

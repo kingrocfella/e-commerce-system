@@ -9,7 +9,7 @@ const Navbar = (props) => {
   return (
     <nav>
       <div className="nav-wrapper container">
-        <Link to="/" className="brand-logo">SHOPMATE</Link>
+        <Link to="/products" className="brand-logo">SHOPMATE</Link>
         {Links}
       </div>
     </nav>

@@ -10,8 +10,6 @@ module.exports = ({ code, sqlMessage }) => {
           "field": "email"
         }
       }
-      return res;
-      break;
     case ("NO TOKEN"): 
       return {
         "error": {
@@ -21,8 +19,6 @@ module.exports = ({ code, sqlMessage }) => {
           "field": ""
         }
       }
-      return res;
-      break;
     case ("AUTH FAILED"): 
       return {
         "error": {
@@ -32,8 +28,6 @@ module.exports = ({ code, sqlMessage }) => {
           "field": ""
         }
       }
-      return res;
-      break;
     case ("INVALID DETAILS"): 
       return  {
         "error": {
@@ -43,8 +37,6 @@ module.exports = ({ code, sqlMessage }) => {
           "field": ""
         }
       }
-      return res;
-      break;
     case ("HA_ERR_AUTOINC_ERANGE"): 
       return  {
         "error": {
@@ -54,8 +46,6 @@ module.exports = ({ code, sqlMessage }) => {
           "field": ""
         }
       }
-      return res;
-      break;
 
 
     default:

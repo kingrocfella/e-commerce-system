@@ -1,8 +1,12 @@
-import authReducer from './authReducer';
+import auth from './authReducer';
+import departments from './departmentsReducer';
+import categories from './categoriesReducer';
 import { combineReducers } from 'redux';
 
 const rootReducers = combineReducers({
-  auth: authReducer
+  auth,
+  departments,
+  categories
 });
 
 

@@ -15,6 +15,18 @@ export default {
       url: baseURL + '/customers',
       data: payload
     });
+  },
+  getDepartments() {
+    return axios({
+      method: 'get',
+      url: baseURL + '/departments'
+    });
+  },
+  getCategories(id) {
+    return axios({
+      method: 'get',
+      url: baseURL + '/categories?department_id='+id
+    });
   }
 
 }

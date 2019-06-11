@@ -1,6 +1,6 @@
 const jwt =  require("jsonwebtoken");
 const config = require("../config");
-const errorHandler = require("../Controllers/errorController");
+const errorHandler = require("../Controllers/customers/errorResponse");
 
 module.exports = (req,res,next) => {
   var token = req.headers['USER-KEY'];

@@ -1,9 +1,9 @@
 const md5 = require("md5");
 const jwt = require("jsonwebtoken");
-const config = require("../config");
-const connection = require("./connection");
-const errorHandler = require("./errorController");
-const validResponse = require("./validResponseController");
+const config = require("../../config");
+const connection = require("../connection");
+const errorHandler = require("./errorResponse");
+const validResponse = require("./validResponse");
 connection.connect();
 
 module.exports = {

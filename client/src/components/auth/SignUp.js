@@ -36,7 +36,7 @@ class SignUp extends Component {
         //push auth details into redux store
         this.props.setAuthData(authData);
         //redirect to products page if logged in
-        this.props.history.push("/");
+        this.props.history.push("/products");
       })
       .catch(err => {
         this.setState({
@@ -63,7 +63,7 @@ class SignUp extends Component {
               <Textbox id="confirmpassword" placeholder="Retype password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Retype Password" />
               <div className="center-align">
                 <Button btnClassName="btn btn-primary" btnName="SIGN UP" disabled={!this.state.email || !this.state.password || !this.state.confirmpassword || (this.state.password !== this.state.confirmpassword)} />
-                <p>Already a user?  <Link to="/login"><strong>Login</strong></Link></p>
+                <p>Already a user?  <Link to="/"><strong>Login</strong></Link></p>
               </div>
             </form>
           </div>
