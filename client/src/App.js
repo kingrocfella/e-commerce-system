@@ -14,7 +14,7 @@ class App extends Component {
           <Navbar />
           <Switch>
             <Route exact path="/products" component= {Products} />
-            <Route path="/" component= {SignIn} />
+            <Route exact path="/login" component= {SignIn} />
             <Route path="/signup" component= {SignUp} />
           </Switch>
         </div>

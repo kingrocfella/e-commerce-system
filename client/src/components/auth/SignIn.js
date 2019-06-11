@@ -45,7 +45,7 @@ class SignIn extends Component {
   }
 
   render() {
-    if (this.props.authData.isUserLoggedIn) return  <Redirect to="/"/>
+    if (this.props.authData.isUserLoggedIn) return  <Redirect to="/products"/>
     let { error } = this.state;
     return (
       <div className="container">

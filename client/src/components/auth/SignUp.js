@@ -47,7 +47,7 @@ class SignUp extends Component {
   }
 
   render() {
-    if (this.props.authData.isUserLoggedIn) return  <Redirect to="/"/>
+    if (this.props.authData.isUserLoggedIn) return  <Redirect to="/products"/>
     let { error } = this.state;
     return (
       <div className="container">
@@ -63,7 +63,7 @@ class SignUp extends Component {
               <Textbox id="confirmpassword" placeholder="Retype password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Retype Password" />
               <div className="center-align">
                 <Button btnClassName="btn btn-primary" btnName="SIGN UP" disabled={!this.state.email || !this.state.password || !this.state.confirmpassword || (this.state.password !== this.state.confirmpassword)} />
-                <p>Already a user?  <Link to="/"><strong>Login</strong></Link></p>
+                <p>Already a user?  <Link to="/login"><strong>Login</strong></Link></p>
               </div>
             </form>
           </div>
