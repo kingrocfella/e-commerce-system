@@ -51,7 +51,7 @@ module.exports = {
 
     connection.query(query, ['customer', String(req.body.email), password], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
-      if (rows.length < 1) return res.status(500).send(errorHandler({ code: "INVALID DETAILS" }))
+      if (rows.length < 1) return res.status(500).send(errorHandler({ code: "INVALID DETAILS" }));
       let token = jwt.sign({ id: rows[0]["customer_id"] }, config.secret, { expiresIn: 86400 });
       res.status(200).send(validResponse({ type: "login", token, customer: rows[0] }));
     });

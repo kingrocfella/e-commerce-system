@@ -16,7 +16,7 @@ module.exports = ({ code, sqlMessage }) => {
           "status": 403,
           "code": "AUT_01",
           "message": "Authorization code is empty",
-          "field": ""
+          "field": "USER-KEY"
         }
       }
     case ("AUTH FAILED"): 
@@ -49,6 +49,14 @@ module.exports = ({ code, sqlMessage }) => {
 
 
     default:
-      break;
+        return  {
+          "error": {
+            "status": 500,
+            "code": code,
+            "message": sqlMessage,
+            "field": ""
+          }
+        }
+
   }
 }

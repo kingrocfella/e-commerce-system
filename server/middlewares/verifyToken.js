@@ -3,7 +3,7 @@ const config = require("../config");
 const errorHandler = require("../Controllers/customers/errorResponse");
 
 module.exports = (req,res,next) => {
-  var token = req.headers['USER-KEY'];
+  var token = req.header('USER-KEY');
   if (!token) return res.status(403).send(errorHandler({code: "NO TOKEN", sqlMessage: null}));
   jwt.verify(token,config.secret, (err,decoded) => {
     if (err) return res.status(401).send(errorHandler({code: "AUTH FAILED", sqlMessage: null}));
@@ -11,5 +11,4 @@ module.exports = (req,res,next) => {
     req.customer_id = decoded.id;
     next();
   })
-
 }
