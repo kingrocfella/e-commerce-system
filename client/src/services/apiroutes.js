@@ -27,6 +27,18 @@ export default {
       method: 'get',
       url: baseURL + '/categories?department_id='+id
     });
+  },
+  getAllProducts(payload) {
+    return axios({
+      method: 'get',
+      url: baseURL + '/products?description_length='+payload['desc_length']+'&page='+payload['page']
+    });
+  },
+  searchProducts(payload) {
+    return axios({
+      method: 'get',
+      url: baseURL + '/products/search?description_length='+payload['desc_length']+'&page='+payload['page']+'&query_string='+payload['query_string']
+    });
   }
 
 }

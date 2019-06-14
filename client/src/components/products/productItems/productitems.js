@@ -1,47 +1,65 @@
 import React, { Component } from 'react';
-import bg from '../../../img/bg.jpg'
+import ProductCard from './productCard';
+import { connect } from 'react-redux';
+import apiService from '../../../services/apiroutes';
+import getProductsAction from '../../../store/actions/getProductsAction';
 
 class ProductItems extends Component {
 
+  componentDidMount() {
+    const { pageNum } = this.props;
+    this.handlePageChange(pageNum);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.pageNum !== prevProps.pageNum) {
+      this.handlePageChange(this.props.pageNum);
+    }
+  }
+
+  handlePageChange = page => {
+    let payload = {
+      page: page,
+      desc_length: 35
+    }
+    apiService.getAllProducts(payload)
+      .then(res => {
+        //disptach an action to load departments
+        if(res.data.count > 0) this.props.getProducts(res.data); 
+        else this.props.decrementState();   
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  handleHover = id => {
+    // console.log(id)
+  }
+
   render() {
+    let { products } = this.props.products;
+    for (let key in products) {
+      if (key === 'rows') {
+        var productsArray = products[key];
+      }
+    }
     return (
       <div>
-        <div className="col s4">
-          <div className="card">
-            <div className="card-image">
-              <img src={bg} height="200" width="50" alt="product" />
-            </div>
-            <div className="card-content">
-              <span className="card-title">Card Title</span>
-              <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-            </div>
-          </div>
-        </div>
-        <div className="col s4">
-          <div className="card">
-            <div className="card-image">
-              <img src={bg} height="200" width="50" alt="product" />
-            </div>
-            <div className="card-content">
-              <span className="card-title">Card Title</span>
-              <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-            </div>
-          </div>
-        </div>
-        <div className="col s4">
-          <div className="card">
-            <div className="card-image">
-              <img src={bg} height="200" width="50" alt="product" />
-            </div>
-            <div className="card-content">
-              <span className="card-title">Card Title</span>
-              <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-            </div>
-          </div>
+        <div>
+          <ProductCard products={productsArray} handleHover={this.handleHover} />
         </div>
       </div>
     );
   }
 }
 
-export default ProductItems;
+const mapDispatchToProps = (dispatch) => ({
+  getProducts: (products) => dispatch(getProductsAction(products))
+});
+
+const mapStateToProps = (state) => ({
+  products: state.products
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductItems);
