@@ -3,45 +3,59 @@ import SideBar from './sidebar/sidebar';
 import ProductItems from './productItems/productitems';
 import { connect } from 'react-redux';
 
+
 class Products extends Component {
   state = {
-    page: 1
+    page: 1,
+    deptID: "",
+    catID: "",
+    search: "",
+    productCount: ""
   }
   handleClick = num => {
-    if (isNaN(num)) {
-      let page = this.state.page;
-      if (num === 'N') this.setState({ page: page + 1 });
-      else {
-        if (page === 1) return;
-        else this.setState({ page: page - 1 });
-      }
-    } else {
-      this.setState({ page: num });
-    }
+    this.setState({ page: num });
   }
 
-  decrementState = () => {
-    let page = this.state.page;
-    this.setState({ page: page - 1 });
+  handleDeptPage = (dept_id) => {
+    this.setState({ deptID: dept_id })
+  }
+  handleCatPage = (cat_id) => {
+    this.setState({ catID: cat_id })
+  }
+  handleSearchTerm = (search) => {
+    this.setState({ search })
   }
 
   render() {
+    let { products } = this.props.products;
+    let productCount;
+    for(let key in products) if(key=== 'count') productCount = products[key];
+    let pages = Math.ceil(productCount/20);
+    let pagesArray = [];
+    for (let index = 1; index <= pages; index++) {
+      pagesArray[index] = index;
+    }
+    let pagination = (pagesArray) ? (
+      pagesArray.map((page,index) => {
+        return(
+          <div key={index} className="btn-floating center btn-medium waves-effect waves-light red paginationBtn" onClick={() => { this.handleClick(index) }}>{index}</div>
+        )
+      })
+    ): null;
+
     let renderPage = (this.props.departments) ?
       <div>
         <div className="row">
           <div className="col s6 offset-s5">
-            <div className="btn-floating center btn-medium waves-effect waves-light red paginationBtn" onClick={() => { this.handleClick('B') }}>Back</div> &nbsp;&nbsp;
-            <div className="btn-floating center btn-medium waves-effect waves-light red paginationBtn" onClick={() => { this.handleClick(1) }}>1</div>
-            <div className="btn-floating center btn-medium waves-effect waves-light red paginationBtn" onClick={() => { this.handleClick(2) }}>2</div> &nbsp;&nbsp;
-            <div className="btn-floating center btn-medium waves-effect waves-light red paginationBtn" onClick={() => { this.handleClick('N') }}>Next</div>
+            {pagination}
           </div>
         </div>
         <div className="row">
           <div className="col s2">
-            <SideBar />
+            <SideBar handleDeptPage={this.handleDeptPage} handleCatPage={this.handleCatPage} handleSearchTerm={this.handleSearchTerm} />
           </div>
           <div className="col s10">
-            <ProductItems pageNum={this.state.page} decrementState={this.decrementState} />
+            <ProductItems pageNum={this.state.page} PageStates={this.state} />
           </div>
         </div>
       </div> : null
@@ -54,7 +68,8 @@ class Products extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  departments: state.departments
+  departments: state.departments,
+  products: state.products
 });
 
 export default connect(mapStateToProps)(Products);

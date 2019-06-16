@@ -11,32 +11,66 @@ class SideBar extends Component {
   state = {
     showCategories: false,
     currentUrl: "",
-    searchBox: ""
+    searchBox: "",
+    deptID: "",
+    catID: ""
   }
 
-  handleClick = (id,url) => {
-    apiService.getCategories(id)
-      .then(res => {
-        this.props.getCategories(res.data.rows)
-        this.setState({
-          showCategories: true,
-          currentUrl: url
-        });
-      })
+  handleClick = (id, url) => {
+    this.props.handleDeptPage(id);
+    this.setState({ deptID: id })
+    let payload = {
+      id,
+      page: 1,
+      desc_length: 35
+    }
+    Promise.all([
+      apiService.getCategories(id),
+      apiService.getProductsByDeptID(payload)
+    ]).then(([resCat, resProd]) => {
+      this.props.getProducts(resProd.data)
+      this.props.getCategories(resCat.data.rows)
+      this.setState({
+        showCategories: true,
+        currentUrl: url
+      });
+    })
       .catch(err => {
         console.log(err);
       });
   }
 
   handleCategoryClick = id => {
-    console.log(id);
+    this.props.handleCatPage(id);
+    this.setState({ catID: id })
+    let payload = {
+      id,
+      page: 1,
+      desc_length: 35
+    }
+    apiService.getProductsByCatID(payload)
+      .then(res => {
+        this.props.getProducts(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   componentDidMount() {
     apiService.getDepartments()
       .then(res => {
-        //disptach an action to load departments
         this.props.getAllDepartments(res.data);
+        let { deptID } = this.state;
+        if (deptID) {
+          apiService.getCategories(deptID)
+            .then(res => {
+              this.props.getCategories(res.data.rows)
+              this.setState({
+                showCategories: true
+              });
+            })
+        }
       })
       .catch(err => {
         console.log(err);
@@ -51,40 +85,75 @@ class SideBar extends Component {
 
   handleSearch = e => {
     if (e.key === 'Enter') {
+      this.props.handleSearchTerm(this.state.searchBox);
       let payload = {
         page: 1,
         desc_length: 35,
         query_string: this.state.searchBox
       }
       apiService.searchProducts(payload)
-      .then(res => {
-        if(res.data.count > 0) this.props.getProducts(res.data); 
-      })
-      .catch(err => {
-        console.log(err)
-      })
+        .then(res => {
+          this.props.getProducts(res.data);
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 
   resetProducts = () => {
-    let payload = {
-      page: 1,
-      desc_length: 35
+    let { deptID, catID, search } = this.state
+    try {
+      if (search) {
+        let payload = {
+          page: 1,
+          desc_length: 35,
+          query_string: search
+        }
+        apiService.searchProducts(payload)
+          .then(res => {
+            this.props.getProducts(res.data);
+          })
+      }
+      else if (catID) {
+        let payload = {
+          id: catID,
+          page: 1,
+          desc_length: 35
+        }
+        apiService.getProductsByCatID(payload)
+          .then(res => {
+            this.props.getProducts(res.data)
+          })
+      }
+      else if (deptID) {
+        let payload = {
+          id: deptID,
+          page: 1,
+          desc_length: 35
+        }
+        Promise.all([
+          apiService.getCategories(deptID),
+          apiService.getProductsByDeptID(payload)
+        ]).then(([resCat, resProd]) => {
+          this.props.getProducts(resProd.data)
+          this.props.getCategories(resCat.data.rows)
+          this.setState({
+            showCategories: true
+          });
+        })
+      }
+      else {
+        this.props.history.push("/products")
+      }
+    } catch (error) {
+      console.log(error)
     }
-    apiService.getAllProducts(payload)
-      .then(res => {
-        //disptach an action to load departments
-        if(res.data.count > 0) this.props.getProducts(res.data);   
-      })
-      .catch(err => {
-        console.log(err);
-      });
   }
 
   render() {
     let { departments } = this.props.departments;
     let { categories } = this.props.categories;
-
     let ShowCategories = (this.state.showCategories) ?
       <div className="row">
         <div className="col s9 offset-s1">
@@ -94,12 +163,12 @@ class SideBar extends Component {
           </div>
         </div>
       </div> : null;
-    
+
     return (
       <div className="card #fafafa grey lighten-5">
         <div className="row">
           <div className="col s9 offset-s1">
-            <input type="text" placeholder="Search" id="searchBox" onKeyDown={this.handleSearch} onChange={this.handleState} onBlur={this.resetProducts}/>
+            <input type="text" placeholder="Search" id="searchBox" onKeyDown={this.handleSearch} onChange={this.handleState} onBlur={this.resetProducts} />
           </div>
         </div>
         <div className="row">

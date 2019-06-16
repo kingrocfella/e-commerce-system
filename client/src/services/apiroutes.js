@@ -28,6 +28,18 @@ export default {
       url: baseURL + '/categories?department_id='+id
     });
   },
+  getProductsByDeptID({id, page, desc_length}) {
+    return axios({
+      method: 'get',
+      url: `${baseURL}/products/inDepartment/${id}?description_length=${desc_length}&page=${page}`
+    });
+  },
+  getProductsByCatID({id, page, desc_length}) {
+    return axios({
+      method: 'get',
+      url: `${baseURL}/products/inCategory/${id}?description_length=${desc_length}&page=${page}`
+    });
+  },
   getAllProducts(payload) {
     return axios({
       method: 'get',

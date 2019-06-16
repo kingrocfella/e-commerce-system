@@ -2,7 +2,10 @@ const user = require("./Controllers/customers/userController");
 const department = require("./Controllers/departments/departmentController");
 const categories = require("./Controllers/categories/categoriesController");
 const product = require("./Controllers/products/productController");
+const shoppingcart = require("./Controllers/shoppingcart/shoppingcartController");
 const verifyToken = require("./middlewares/verifyToken");
+const multer  = require('multer');
+const upload = multer();
 
 module.exports = (app) => {
   //login route
@@ -14,7 +17,7 @@ module.exports = (app) => {
   //   user.getUsers(req,res);
   // })
   //register users
-  app.post("/customers", (req, res) => {
+  app.post("/customers", upload.none(), (req, res) => {
     user.register(req, res);
   });
 
@@ -60,7 +63,7 @@ module.exports = (app) => {
   app.get("/products/inCategory/:category_id", (req, res) => {
     product.getProductsByCategoryId(req,res);
   });
-  //get products by productID
+  //get products by departmentID
   app.get("/products/inDepartment/:department_id", (req, res) => {
     product.getProductsByDepartmentId(req,res);
   });
@@ -73,7 +76,49 @@ module.exports = (app) => {
     product.getProductReviews(req,res);
   });
   //post product reviews
-  app.post("/products/:product_id/reviews", verifyToken, (req, res) => {
+  app.post("/products/:product_id/reviews", verifyToken, upload.none(), (req, res) => {
     product.postProductReviews(req,res);
+  });
+
+
+  //generate unique card_id
+  app.get("/shoppingcart/generateUniqueId", (req,res) => {
+    shoppingcart.generateUniqueID(req,res);
+  });
+  //add item to cart
+  app.post("/shoppingcart/add", verifyToken, upload.none(), (req,res) => {
+    shoppingcart.addToCart(req,res);
+  });
+  //get items from cart
+  app.get("/shoppingcart/:cart_id", (req,res) => {
+    shoppingcart.getProductsFromCart(req,res);
+  });
+  //update item quantity in cart
+  app.put("/shoppingcart/update/:item_id", upload.none(), (req,res) => {
+    shoppingcart.updateProductsInCart(req,res);
+  });
+  //empty cart
+  app.delete("/shoppingcart/empty/:cart_id", (req,res) => {
+    shoppingcart.emptyCart(req,res);
+  });
+  //move product to cart
+  app.get("/shoppingcart/moveToCart/:item_id", (req,res) => {
+    shoppingcart.moveProductToCart(req,res);
+  });
+  //get total amount in cart
+  app.get("/shoppingcart/totalAmount/:cart_id", (req,res) => {
+    shoppingcart.getTotalAmountInCart(req,res);
+  });
+  //save product for later
+  app.get("/shoppingcart/saveForLater/:item_id", (req,res) => {
+    shoppingcart.saveProductForLater(req,res);
+  });
+  //get saved product for later
+  app.get("/shoppingcart/getSaved/:cart_id", (req,res) => {
+    shoppingcart.getSavedProductForLater(req,res);
+  });
+  //delete product in cart
+  app.delete("/shoppingcart/removeProduct/:item_id", (req,res) => {
+    shoppingcart.removeProductInCart(req,res);
   });
 }

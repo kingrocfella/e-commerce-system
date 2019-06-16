@@ -3,25 +3,31 @@ const errorHandler = require("./errorResponse");
 
 module.exports = {
   getCategories(req,res){
-    let dep_id, cat_id, name;
-    if(req.query.department_id){
-      dep_id = req.query.department_id;
-      var query = "SELECT * FROM ?? WHERE department_id = ?";
-    } 
-    else if (req.query.category_id) {
-      cat_id = req.query.category_id;
-      var query = "SELECT * FROM ?? WHERE category_id = ?";
+    let cat_id, name, query, limit, page;
+    if(!req.query.page) page = 1;
+    if(!req.query.limit) limit = 20;
+    cat_id = req.query.category_id;
+    name = String(req.query.name);
+
+    if(cat_id && name){
+      query = `SELECT (select count(*) FROM category WHERE category_id = ${cat_id} AND name = ${name}) as counter, * FROM ?? WHERE category_id = ? AND name = ? LIMIT ? OFFSET ?`;
+      connection.query(query, ['category',cat_id,name,limit,((page-1) * limit)], (err, rows) => {
+        if (err) return res.status(500).send(errorHandler(err));
+        res.status(200).send({count: rows[0]['counter'], rows});
+      });
     }
-    else if (req.query.name) {
-      req.query.name;
-      var query = "SELECT * FROM ?? WHERE department_id = ?";
+    else if (cat_id) {
+      query = `SELECT (select count(*) FROM category WHERE category_id = ${cat_id}) as counter, category_id,name,description,department_id FROM category WHERE category_id = ${cat_id} LIMIT ? OFFSET ?`;
+    }
+    else if (name) {
+      query = `SELECT (select count(*) FROM category WHERE name = ${String(name)}) as counter, category_id,name,description,department_id FROM category WHERE name = ${String(name)} LIMIT ? OFFSET ?`;
     }else{
       return res.status(500).send(errorHandler({code: "CAT_01", sqlMessage: "No category exists with this ID."}));
     }
     
-    connection.query(query, ['category', (dep_id || cat_id || name)], (err, rows) => {
+    connection.query(query, [ limit, ((page-1) * limit)], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
-      res.status(200).send({count: rows.length, rows});
+      res.status(200).send({count: rows[0]['counter'], rows});
     });
   },
   getCategoriesById(req,res){

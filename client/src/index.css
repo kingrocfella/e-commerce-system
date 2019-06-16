@@ -25,3 +25,45 @@ form {
 .paginationBtn{
   margin: 10px;
 }
+
+.add-overlay{
+  background-color: rgb(255, 211, 218);
+  z-index: 2;
+  cursor: pointer;
+  border-radius: 20px;
+  
+}
+.styledButton{
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.emptyButton{
+  background-color: transparent; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.badgeNum{
+  font-size: 10px;
+  padding: 3px 5px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+  margin-top: -10%;
+}

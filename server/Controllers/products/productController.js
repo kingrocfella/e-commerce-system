@@ -11,7 +11,7 @@ module.exports = {
     if (!req.query.page) page = 1;
     if (!req.query.description_length) desc_length = 200;
     let response = [];
-    let query = "SELECT product_id,name,description,price,discounted_price,thumbnail FROM ?? limit ? offset ?";
+    let query = "SELECT (select count(*) from product) as counter,product_id,name,description,price,discounted_price,thumbnail FROM ?? limit ? offset ?";
     connection.query(query, ['product', limit, ((page-1) * limit)], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
       rows.forEach(product => {
@@ -24,7 +24,7 @@ module.exports = {
           thumbnail: product.thumbnail
         });
       });
-      res.status(200).send({count: response.length, rows: response});
+      res.status(200).send({count: rows[0]['counter'], rows: response});
     });
   },
   searchProducts(req,res){
@@ -54,7 +54,12 @@ module.exports = {
           thumbnail: product.thumbnail
         });
       });
-      res.status(200).send({count: response.length, rows: response});
+      
+    });
+    query = "SELECT count(*) as counter FROM ?? WHERE description LIKE ?";
+    connection.query(query, ['product', '%' + query_string + '%'], (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+      res.status(200).send({count: rows[0]['counter'], rows: response});
     });
   },
   getProductsById(req,res){
@@ -80,7 +85,7 @@ module.exports = {
     if (desc_length)  dots = "...";
 
     let response = [];
-    let query = "SELECT product.product_id,name,description,price,discounted_price,thumbnail FROM ?? INNER JOIN product_category ON product.product_id = product_category.product_id  WHERE product_category.category_id = ?  LIMIT ? OFFSET ?";
+    let query = `SELECT (select count(*) from product INNER JOIN product_category ON product.product_id = product_category.product_id  WHERE product_category.category_id = ${category_id}) as counter,product.product_id,name,description,price,discounted_price,thumbnail FROM ?? INNER JOIN product_category ON product.product_id = product_category.product_id WHERE product_category.category_id = ?  LIMIT ? OFFSET ?`;
     connection.query(query, ['product', category_id, limit, ((page-1) * limit)], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
       rows.forEach(product => {
@@ -93,7 +98,7 @@ module.exports = {
           thumbnail: product.thumbnail
         });
       });
-      res.status(200).send({count: response.length, rows: response});
+      res.status(200).send({count: rows[0]['counter'], rows: response});
     });
   },
   getProductsByDepartmentId(req,res){
@@ -109,7 +114,7 @@ module.exports = {
     if (desc_length)  dots = "...";
 
     let response = [];
-    let query = "SELECT product.product_id,product.name, product.description, product.price, discounted_price, thumbnail, display FROM product INNER JOIN product_category ON product_category.product_id = product.product_id INNER JOIN category ON category.category_id = product_category.category_id WHERE category.department_id = ?  LIMIT ? OFFSET ?";
+    let query = `SELECT (select count(*) FROM product INNER JOIN product_category ON product_category.product_id = product.product_id INNER JOIN category ON category.category_id = product_category.category_id WHERE category.department_id = ${department_id}) as counter, product.product_id,product.name, product.description, product.price, discounted_price, thumbnail, display FROM product INNER JOIN product_category ON product_category.product_id = product.product_id INNER JOIN category ON category.category_id = product_category.category_id WHERE category.department_id = ?  LIMIT ? OFFSET ?`;
     connection.query(query, [department_id, limit, ((page-1) * limit)], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
       rows.forEach(product => {
@@ -123,26 +128,26 @@ module.exports = {
           display: product.display
         });
       });
-      res.status(200).send({count: response.length, rows: response});
+      res.status(200).send({count: rows[0]['counter'], rows: response});
     });
   },
   getProductDetails(req,res){
     if(isNaN(req.params.product_id)) return res.status(500).send(errorHandler({code: "PROD_01", "sqlMessage": "The ID is not a number."}));
     let product_id = req.params.product_id;
-    let query = "SELECT product_id, name,description, price,discounted_price, image, image_2 FROM ?? WHERE product_id = ?";
-    connection.query(query, ['product', product_id], (err, rows) => {
+    let query = "call catalog_get_product_details(?)";
+    connection.query(query, [product_id], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
       if(rows.length < 1) return res.status(500).send(errorHandler({code: "PROD_02", "sqlMessage": "ID does not exist"}));
-      res.status(200).send(rows);
+      res.status(200).send(rows[0]);
     });
   },
   getProductReviews(req,res){
     if(isNaN(req.params.product_id)) return res.status(500).send(errorHandler({code: "PROD_01", "sqlMessage": "The ID is not a number."}));
     let product_id = req.params.product_id;
-    let query = "SELECT name,review, rating,created_on FROM ?? INNER JOIN customer ON customer.customer_id = review.customer_id WHERE product_id = ?";
-    connection.query(query, ['review', product_id], (err, rows) => {
+    let query = "call catalog_get_product_reviews(?)";
+    connection.query(query, [product_id], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
-      res.status(200).send(rows);
+      res.status(200).send(rows[0]);
     });
   },
   postProductReviews(req,res){
