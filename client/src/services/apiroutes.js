@@ -25,7 +25,7 @@ export default {
   getCategories(id) {
     return axios({
       method: 'get',
-      url: baseURL + '/categories?department_id='+id
+      url: baseURL + '/categories/inDepartment/'+id
     });
   },
   getProductsByDeptID({id, page, desc_length}) {
@@ -50,6 +50,38 @@ export default {
     return axios({
       method: 'get',
       url: baseURL + '/products/search?description_length='+payload['desc_length']+'&page='+payload['page']+'&query_string='+payload['query_string']
+    });
+  },
+  getProductDetails(id){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/products/${id}/details` 
+    });
+  },
+  generateUniqueCartID(){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/shoppingcart/generateUniqueId` 
+    });
+  },
+  getAttributesByProductID(id){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/attributes/inProduct/${id}` 
+    });
+  },
+  addToCart(payload){
+    return axios({
+      method: 'post',
+      url: `${baseURL}/shoppingcart/add`,
+      data: payload,
+      headers: { 'USER-KEY': payload['token'] }
+    });
+  },
+  getProductsFromCart(cart_id){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/shoppingcart/${cart_id}` 
     });
   }
 

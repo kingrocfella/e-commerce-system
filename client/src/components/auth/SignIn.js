@@ -33,8 +33,14 @@ class SignIn extends Component {
         }
         //push auth details into redux store
         this.props.setAuthData(authData);
-        //redirect to products page if logged in
-        this.props.history.push("/products");
+        //generate cart_id
+        apiService.generateUniqueCartID()
+        .then(res => {
+          let {cart_id} = res.data;
+          localStorage.setItem("cart_id", cart_id);
+          //redirect to products page if logged in
+          this.props.history.push("/products");
+        })
       })
       .catch(err => {
         this.setState({

@@ -13,10 +13,10 @@ class SignedInLinks extends Component {
 
   render() {
     let { addtocart } = this.props.addtocart
-    let cartItems = addtocart.length
+    if(!addtocart) addtocart = localStorage.getItem("cart_items");
     return (
       <ul id="nav-mobile" className="right hide-on-med-and-down">
-        <li><NavLink to="/checkout"><FaShoppingCart /><span className="badgeNum">{cartItems}</span></NavLink></li>
+        <li><NavLink to="/products/checkout"><FaShoppingCart /><span className="badgeNum">{addtocart}</span></NavLink></li>
         <li><NavLink to="/login" onClick={this.handleClick}>Log Out</NavLink></li>
         {/* <li><NavLink to="/" className="btn btn-floating black">KK</NavLink></li> */}
       </ul>

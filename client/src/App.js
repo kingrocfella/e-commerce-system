@@ -4,7 +4,8 @@ import Navbar from './components/layout/Navbar'
 import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import Products from './components/products/products';
-// import requireAuth from './components/hocs/routeguard'
+import Checkout from './components/products/checkout/checkout';
+import requireAuth from './components/hocs/routeguard'
 
 class App extends Component {
   render() {
@@ -13,9 +14,10 @@ class App extends Component {
         <div className="App">
           <Navbar />
           <Switch>
-            <Route path="/products" component= {Products} />
+            <Route exact path="/products" component= {Products} />
             <Route exact path="/login" component= {SignIn} />
             <Route path="/signup" component= {SignUp} />
+            <Route exact path="/products/checkout" component= {requireAuth(Checkout)} />
           </Switch>
         </div>
       </BrowserRouter>

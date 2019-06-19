@@ -3,6 +3,7 @@ const department = require("./Controllers/departments/departmentController");
 const categories = require("./Controllers/categories/categoriesController");
 const product = require("./Controllers/products/productController");
 const shoppingcart = require("./Controllers/shoppingcart/shoppingcartController");
+const attributes = require("./Controllers/attributes/attributesController");
 const verifyToken = require("./middlewares/verifyToken");
 const multer  = require('multer');
 const upload = multer();
@@ -12,10 +13,6 @@ module.exports = (app) => {
   app.post("/customers/login", (req, res) => {
     user.login(req, res);
   });
-  //get all departments
-  // app.get("/departments", verifyToken, (req, res) => {
-  //   user.getUsers(req,res);
-  // })
   //register users
   app.post("/customers", upload.none(), (req, res) => {
     user.register(req, res);
@@ -120,5 +117,22 @@ module.exports = (app) => {
   //delete product in cart
   app.delete("/shoppingcart/removeProduct/:item_id", (req,res) => {
     shoppingcart.removeProductInCart(req,res);
+  });
+
+  //get all attributes
+  app.get("/attributes", (req,res) => {
+    attributes.getAttributes(req,res);
+  });
+  //get attributes by ID
+  app.get("/attributes/:attribute_id", (req,res) => {
+    attributes.getAttributesByAttributeID(req,res);
+  });
+  //get values from attribute
+  app.get("/attributes/values/:attribute_id", (req,res) => {
+    attributes.getValuesFromAttribute(req,res);
+  });
+  //get attributes with product ID
+  app.get("/attributes/inProduct/:product_id", (req,res) => {
+    attributes.getAttributesByProductID(req,res);
   });
 }

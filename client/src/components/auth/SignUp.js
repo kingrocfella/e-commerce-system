@@ -35,8 +35,13 @@ class SignUp extends Component {
         }
         //push auth details into redux store
         this.props.setAuthData(authData);
-        //redirect to products page if logged in
-        this.props.history.push("/products");
+        apiService.generateUniqueCartID()
+          .then(res => {
+            let { cart_id } = res.data;
+            localStorage.setItem("cart_id", cart_id);
+            //redirect to products page if logged in
+            this.props.history.push("/products");
+          });
       })
       .catch(err => {
         this.setState({
@@ -47,7 +52,7 @@ class SignUp extends Component {
   }
 
   render() {
-    if (this.props.authData.isUserLoggedIn) return  <Redirect to="/products"/>
+    if (this.props.authData.isUserLoggedIn) return <Redirect to="/products" />
     let { error } = this.state;
     return (
       <div className="container">

@@ -31,7 +31,6 @@ form {
   z-index: 2;
   cursor: pointer;
   border-radius: 20px;
-  
 }
 .styledButton{
   background-color: #4CAF50; /* Green */
@@ -66,4 +65,8 @@ form {
   background: red;
   color: white;
   margin-top: -10%;
+}
+
+.spacedRow{
+  margin-bottom: 5%;
 }

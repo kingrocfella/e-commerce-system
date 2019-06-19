@@ -1,6 +1,6 @@
 
 const initState = {
-  addtocart: []
+  addtocart: ""
 }
 
 const AddToCartReducer = (state = initState, action) => {
@@ -8,8 +8,7 @@ const AddToCartReducer = (state = initState, action) => {
   switch (type) {
     case "ADD_TO_CART":
       return {
-        ...state,
-        addtocart: [...state.addtocart, addtocart]
+        addtocart
       };
   
     default:

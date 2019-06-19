@@ -18,7 +18,7 @@ class SideBar extends Component {
 
   handleClick = (id, url) => {
     this.props.handleDeptPage(id);
-    this.setState({ deptID: id })
+    this.setState({ deptID: id });
     let payload = {
       id,
       page: 1,
@@ -29,7 +29,7 @@ class SideBar extends Component {
       apiService.getProductsByDeptID(payload)
     ]).then(([resCat, resProd]) => {
       this.props.getProducts(resProd.data)
-      this.props.getCategories(resCat.data.rows)
+      this.props.getCategories(resCat.data)
       this.setState({
         showCategories: true,
         currentUrl: url
@@ -65,7 +65,7 @@ class SideBar extends Component {
         if (deptID) {
           apiService.getCategories(deptID)
             .then(res => {
-              this.props.getCategories(res.data.rows)
+              this.props.getCategories(res.data)
               this.setState({
                 showCategories: true
               });
@@ -137,7 +137,7 @@ class SideBar extends Component {
           apiService.getProductsByDeptID(payload)
         ]).then(([resCat, resProd]) => {
           this.props.getProducts(resProd.data)
-          this.props.getCategories(resCat.data.rows)
+          this.props.getCategories(resCat.data)
           this.setState({
             showCategories: true
           });
