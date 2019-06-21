@@ -3,6 +3,7 @@ module.exports = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
   password : '',
-  database : 'shoppingcart'
+  database : 'shoppingcart',
+  multipleStatements: true
 });
  

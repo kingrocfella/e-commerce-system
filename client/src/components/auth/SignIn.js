@@ -33,14 +33,16 @@ class SignIn extends Component {
         }
         //push auth details into redux store
         this.props.setAuthData(authData);
-        //generate cart_id
-        apiService.generateUniqueCartID()
-        .then(res => {
-          let {cart_id} = res.data;
-          localStorage.setItem("cart_id", cart_id);
-          //redirect to products page if logged in
-          this.props.history.push("/products");
-        })
+        if (!localStorage.getItem("cart_id")) {
+          //generate cart_id
+          apiService.generateUniqueCartID()
+            .then(res => {
+              let { cart_id } = res.data;
+              localStorage.setItem("cart_id", cart_id);
+              //redirect to products page if logged in
+              this.props.history.push("/products");
+            })
+        }
       })
       .catch(err => {
         this.setState({
@@ -51,7 +53,7 @@ class SignIn extends Component {
   }
 
   render() {
-    if (this.props.authData.isUserLoggedIn) return  <Redirect to="/products"/>
+    if (this.props.authData.isUserLoggedIn) return <Redirect to="/products" />
     let { error } = this.state;
     return (
       <div className="container">
@@ -61,8 +63,8 @@ class SignIn extends Component {
             <form onSubmit={this.handleSubmit} className="white">
               {error ? <Alert componentclassName="red-text text-darken-1 center" alert={error} /> : null}
               <FormHeader componentclassName="grey-text text-darken-3 center" HeaderName="LOGIN" />
-              <Textbox id="email" placeholder="Enter Email" type="email" onChangeMethod={this.handleChange} className="input-field" label="Email" />
-              <Textbox id="password" placeholder="Enter password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Password" />
+              <Textbox id="email"  type="email" onChangeMethod={this.handleChange} className="input-field" label="Email" placeholder="Email"/>
+              <Textbox id="password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Password" placeholder="Password" />
               <div className="center-align">
                 <Button btnClassName="btn btn-primary" btnName="LOGIN" disabled={!this.state.email || !this.state.password} />
                 <p>Not a registered user?  <Link to="/signup"><strong>Sign Up</strong></Link></p>

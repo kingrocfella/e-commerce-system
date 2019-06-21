@@ -1,6 +1,5 @@
 
 const persistState = ({ auth: { isUserLoggedIn, token, email, name, customer_id }, addtocart: { addtocart } }) => {
-  console.log(addtocart)
   if (isUserLoggedIn) localStorage.setItem("isUserLoggedIn", isUserLoggedIn);
   if (token) localStorage.setItem("token", token);
   if (email) localStorage.setItem("email", email);

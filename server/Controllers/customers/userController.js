@@ -59,16 +59,90 @@ module.exports = {
   getUsers(req, res) {
     let query = "SELECT * FROM ?? WHERE user_id = ?";
     connection.query(query, ['user', req.user_id], (err, results) => {
-      if (err) {
-        return res.status(500).send({
-          "message": err.message
-        })
-      }
-      res.status(200).send({
-        user: results
+      if (err) return res.status(500).send(errorHandler(err));
+      res.status(200).send({user: results});
+    });
+  },
+  update(req, res){
+    if (!req.body.email || !req.body.name) {
+      let empty = [];
+      if (!req.body.email) empty.push("Email");
+      if (!req.body.name) empty.push("Name");
+      return res.status(400).send({
+        "error": {
+          "status": 400,
+          "code": "USR_02",
+          "message": "The field(s) are/is required",
+          "field": empty
+        }
       });
-    })
-  }
+    }
+    let password = md5(String(req.body.password));
+    let query = "call customer_update_account(?,?,?,?,?,?,?)"
+    connection.query(query, [req.customer_id, req.body.name, req.body.email, password, req.body.day_phone, req.body.eve_phone, req.body.mob_phone], (err, results) => {
+      if (err) return res.status(500).send(errorHandler(err));
+    });
+    connection.query(`SELECT * from customer WHERE customer_id = ?`,[req.customer_id], (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+      res.status(200).send(validResponse({type: 'userdetails', token: null, customer: rows[0]}));
+    });
+  },
+  getUserDetails(req, res){
+    connection.query(`SELECT * from customer WHERE customer_id = ?`,[req.customer_id], (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+      res.status(200).send(validResponse({type: 'userdetails', token: null, customer: rows[0]}));
+    });
+  },
+  updateUserAddress(req, res){
+    if (!req.body.address_1 || !req.body.city || !req.body.region || !req.body.postal_code || !req.body.country || !req.body.shipping_region_id) {
+      let empty = [];
+      if (!req.body.address_1) empty.push("address_1");
+      if (!req.body.city) empty.push("city");
+      if (!req.body.region) empty.push("region");
+      if (!req.body.postal_code) empty.push("postal_code");
+      if (!req.body.country) empty.push("country");
+      if (!req.body.shipping_region_id) empty.push("shipping_region_id");
+      return res.status(400).send({
+        "error": {
+          "status": 400,
+          "code": "USR_02",
+          "message": "The field(s) are/is required",
+          "field": empty
+        }
+      });
+    }
 
+    let query = "call customer_update_address(?,?,?,?,?,?,?,?)"
+    connection.query(query, [req.customer_id, req.body.address_1, req.body.address_2, req.body.city, req.body.region, req.body.postal_code, req.body.country, req.body.shipping_region_id], (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+    });
+    connection.query(`SELECT * from customer WHERE customer_id = ${req.customer_id}`,null, (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+      res.status(200).send(validResponse({type: 'userdetails', token: null, customer: rows[0]}));
+    });
+  },
+  updateUserCreditCard(req, res){
+    if (!req.body.credit_card) {
+      let empty = [];
+      if (!req.body.credit_card) empty.push("credit_card");
+      return res.status(400).send({
+        "error": {
+          "status": 400,
+          "code": "USR_02",
+          "message": "The field(s) are/is required",
+          "field": empty
+        }
+      });
+    }
+
+    let query = "call customer_update_credit_card(?,?)";
+    connection.query(query, [req.customer_id, req.body.credit_card], (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+    });
+    connection.query(`SELECT * from customer WHERE customer_id = ${req.customer_id}`,null, (err, rows) => {
+      if (err) return res.status(500).send(errorHandler(err));
+      res.status(200).send(validResponse({type: 'userdetails', token: null, customer: rows[0]}));
+    });
+  }
 }
 

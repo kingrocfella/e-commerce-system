@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom"
 import removeState from '../../store/removeState'
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaAngleDown } from 'react-icons/fa';
 import { connect } from 'react-redux';
-
+import M from 'materialize-css';
 
 class SignedInLinks extends Component {
+
+  componentDidMount(){
+    M.AutoInit();
+  }
+
   handleClick = () => {
     removeState();
     this.props.history.push("/login");
@@ -13,12 +18,18 @@ class SignedInLinks extends Component {
 
   render() {
     let { addtocart } = this.props.addtocart
-    if(!addtocart) addtocart = localStorage.getItem("cart_items");
+    if (!addtocart) addtocart = localStorage.getItem("cart_items");
+    let name = localStorage.getItem("name");
     return (
       <ul id="nav-mobile" className="right hide-on-med-and-down">
         <li><NavLink to="/products/checkout"><FaShoppingCart /><span className="badgeNum">{addtocart}</span></NavLink></li>
         <li><NavLink to="/login" onClick={this.handleClick}>Log Out</NavLink></li>
-        {/* <li><NavLink to="/" className="btn btn-floating black">KK</NavLink></li> */}
+        <li><div data-target='dropdown1' className='dropdown-trigger'>{name} <FaAngleDown /></div></li>
+        <ul id='dropdown1' className='dropdown-content'>
+          <li><p className="center">Profile</p></li>
+          <li className="divider" tabIndex="-1"></li>
+          <li><NavLink to="/user/profile">View/Edit Profile</NavLink></li>
+        </ul>
       </ul>
     );
   }

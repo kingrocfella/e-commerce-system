@@ -6,7 +6,7 @@ const router = require("./router");
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({
-  extended: false
+  extended: true
 }));
 app.use(bodyParser.json())
 router(app);

@@ -83,6 +83,45 @@ export default {
       method: 'get',
       url: `${baseURL}/shoppingcart/${cart_id}` 
     });
+  },
+  deleteProductFromCart(item_id){
+    return axios({
+      method: 'delete',
+      url: `${baseURL}/shoppingcart/removeProduct/${item_id}` 
+    });
+  },
+  getTotalAmount(cart_id){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/shoppingcart/totalAmount/${cart_id}` 
+    });
+  },
+  getUserDetails(token){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/customer`,
+      headers: { 'USER-KEY': token }
+    });
+  },
+  updateUserDetails(payload){
+    return axios({
+      method: 'put',
+      url: `${baseURL}/customer`,
+      data: payload,
+      headers: { 'USER-KEY': payload['token'] }
+    });
+  },
+  getShippingRegions(){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/shipping/regions` 
+    });
+  },
+  getShippingRegionsByID(id){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/shipping/regions/${id}` 
+    });
   }
 
 }

@@ -5,6 +5,8 @@ import SignIn from './components/auth/SignIn'
 import SignUp from './components/auth/SignUp'
 import Products from './components/products/products';
 import Checkout from './components/products/checkout/checkout';
+import UserProfile from './components/userData/userprofile';
+import Orders from './components/products/orders/order'
 import requireAuth from './components/hocs/routeguard'
 
 class App extends Component {
@@ -18,6 +20,8 @@ class App extends Component {
             <Route exact path="/login" component= {SignIn} />
             <Route path="/signup" component= {SignUp} />
             <Route exact path="/products/checkout" component= {requireAuth(Checkout)} />
+            <Route exact path="/user/profile" component= {requireAuth(UserProfile)} />
+            <Route exact path="/products/orders" component= {requireAuth(Orders)} />
           </Switch>
         </div>
       </BrowserRouter>

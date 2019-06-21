@@ -4,11 +4,17 @@ const categories = require("./Controllers/categories/categoriesController");
 const product = require("./Controllers/products/productController");
 const shoppingcart = require("./Controllers/shoppingcart/shoppingcartController");
 const attributes = require("./Controllers/attributes/attributesController");
+const orders = require("./Controllers/orders/orderController");
+const tax = require('./Controllers/taxes/taxController');
+const shipping = require('./Controllers/shipping/shippingController');
 const verifyToken = require("./middlewares/verifyToken");
 const multer  = require('multer');
 const upload = multer();
 
 module.exports = (app) => {
+
+  //----------------Customers APIs---------------------------------------------
+
   //login route
   app.post("/customers/login", (req, res) => {
     user.login(req, res);
@@ -17,6 +23,25 @@ module.exports = (app) => {
   app.post("/customers", upload.none(), (req, res) => {
     user.register(req, res);
   });
+  //update user
+  app.put("/customer", upload.none(), verifyToken, (req, res) => {
+    user.update(req, res);
+  });
+  //get user info
+  app.get("/customer", verifyToken, (req, res) => {
+    user.getUserDetails(req, res);
+  });
+  //update user address
+  app.put("/customers/address", upload.none(), verifyToken, (req, res) => {
+    user.updateUserAddress(req, res);
+  });
+  //update user credit card details
+  app.put("/customers/creditCard", upload.none(), verifyToken, (req, res) => {
+    user.updateUserCreditCard(req, res);
+  });
+
+
+  //----------------DEPARTMENT APIS--------------------------------------------------
 
   //get all departments
   app.get("/departments", (req, res) => {
@@ -26,6 +51,9 @@ module.exports = (app) => {
   app.get("/departments/:department_id", (req, res) => {
     department.getDepartmentsById(req,res);
   });
+
+
+  //------------------CATEGORIES APIS--------------------------------------------------
 
   //get all categories
   app.get("/categories", (req, res) => {
@@ -43,6 +71,9 @@ module.exports = (app) => {
   app.get("/categories/inDepartment/:department_id", (req, res) => {
     categories.getCategoriesByDepartment(req,res);
   });
+
+
+  //----------------------PRODUCTS APIS--------------------------------------------------
 
   //get products
   app.get("/products", (req, res) => {
@@ -77,6 +108,8 @@ module.exports = (app) => {
     product.postProductReviews(req,res);
   });
 
+
+  //----------------SHOPPING CART APIS.--------------------------------------------------------
 
   //generate unique card_id
   app.get("/shoppingcart/generateUniqueId", (req,res) => {
@@ -119,6 +152,9 @@ module.exports = (app) => {
     shoppingcart.removeProductInCart(req,res);
   });
 
+
+  //----------------------------ATTRIBUTES APIS-------------------------------------------------------------
+
   //get all attributes
   app.get("/attributes", (req,res) => {
     attributes.getAttributes(req,res);
@@ -135,4 +171,49 @@ module.exports = (app) => {
   app.get("/attributes/inProduct/:product_id", (req,res) => {
     attributes.getAttributesByProductID(req,res);
   });
+
+
+  //-------------------------------ORDERS APIS----------------------------------------------------------------
+  
+  //create order
+  app.post("/orders", verifyToken, upload.none(), (req,res) => {
+    orders.createOrder(req,res);
+  });
+  //get orders by customer
+  app.get("/orders/inCustomer", verifyToken,(req,res) => {
+    orders.getUserOrders(req,res);
+  });
+  //get order details
+  app.get("/orders/:order_id", verifyToken,(req,res) => {
+    orders.getOrderDetails(req,res);
+  });
+  //get info about order
+  app.get("/orders/shortDetail/:order_id", verifyToken,(req,res) => {
+    orders.getOrderShortDetail(req,res);
+  });
+
+
+  //------------------------- Taxes APIS-----------------------------------------------------------------------
+
+  //get all taxes
+  app.get("/tax",(req,res) => {
+    tax.getAllTaxes(req,res);
+  });
+  //get taxes by ID
+  app.get("/tax/:tax_id",(req,res) => {
+    tax.getTaxesByID(req,res);
+  });
+
+
+  //----------------------SHIPPING APIS ------------------------------------------------------------------------
+  
+  //get shipping regions
+  app.get("/shipping/regions",(req,res) => {
+    shipping.getAllShippingRegions(req,res);
+  });
+  //get shipping regions by ID
+  app.get("/shipping/regions/:shipping_region_id",(req,res) => {
+    shipping.getShippingRegionsByID(req,res);
+  });
+
 }

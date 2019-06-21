@@ -8,6 +8,7 @@ import authAction from '../../../store/actions/authAction';
 import addtocartAction from '../../../store/actions/addtocartAction';
 import ProductDetailModal from '../../modals/productDetailModal';
 import LoginModal from '../../modals/loginModal';
+import ErrorModal from '../../modals/errorModal';
 
 class ProductItems extends Component {
 
@@ -22,7 +23,8 @@ class ProductItems extends Component {
     password: "",
     error: "",
     showLoginModal: "",
-    product_id: ""
+    product_id: "",
+    showErrorModal: ""
   }
 
   componentDidMount() {
@@ -102,6 +104,9 @@ class ProductItems extends Component {
   }
 
   handleAddToCart = (id) => {
+    if(!(this.state.selectName && this.state.selectValue)){
+      return this.setState({showErrorModal: "Please select both attribute name and value!"});
+    } 
     let token = localStorage.getItem("token");
     this.setState({ product_id: id });
     if (token) {
@@ -117,8 +122,8 @@ class ProductItems extends Component {
           this.props.addtocart(res.data.length);
         })
         .catch(err => {
-
-        });
+          this.setState({ showErrorModal: "An error occured while adding product to cart!" });
+        })
     } else {
       this.setState({ showLoginModal: true })
     }
@@ -143,6 +148,9 @@ class ProductItems extends Component {
   closeLogin = () => {
     this.setState({ showLoginModal: false })
   }
+  closeError = () => {
+    this.setState({ showErrorModal: false })
+  }
 
   handleSelectNameChange = name => {
     this.setState({ selectName: name })
@@ -158,6 +166,7 @@ class ProductItems extends Component {
         this.setState({ attributesList: res.data })
       })
   }
+
 
   handleSubmit = (e) => {
     e.preventDefault();
@@ -221,6 +230,7 @@ class ProductItems extends Component {
     }
     return (
       <div>
+        <ErrorModal error={this.state.showErrorModal} hide={this.closeError} />
         <LoginModal handleSubmit={this.handleSubmit} handleLoginChange={this.handleLoginChange} show={this.state.showLoginModal} hide={this.closeLogin} error={this.state.error} />
         <ProductDetailModal detail={this.state.productDetail} show={this.state.showModal} hide={this.close} />
         <div onMouseLeave={this.handleMouseLeave}>

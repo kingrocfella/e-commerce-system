@@ -62,10 +62,10 @@ class SignUp extends Component {
             <form onSubmit={this.handleSubmit} className="white">
               {error ? <Alert componentclassName="red-text text-darken-1 center" alert={error} /> : null}
               <FormHeader componentclassName="grey-text text-darken-3 center" HeaderName="SIGN UP" />
-              <Textbox id="name" placeholder="Enter Name" type="text" onChangeMethod={this.handleChange} className="input-field" label="Name" />
-              <Textbox id="email" placeholder="Enter Email" type="email" onChangeMethod={this.handleChange} className="input-field" label="Email" />
-              <Textbox id="password" placeholder="Enter password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Password" />
-              <Textbox id="confirmpassword" placeholder="Retype password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Retype Password" />
+              <Textbox id="name"  type="text" onChangeMethod={this.handleChange} className="input-field" label="Name" placeholder="Name" />
+              <Textbox id="email" type="email" onChangeMethod={this.handleChange} className="input-field" label="Email" placeholder="Email"/>
+              <Textbox id="password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Password" placeholder="Password"/>
+              <Textbox id="confirmpassword" type="password" onChangeMethod={this.handleChange} className="input-field" label="Retype Password" placeholder="Retype Password"/>
               <div className="center-align">
                 <Button btnClassName="btn btn-primary" btnName="SIGN UP" disabled={!this.state.email || !this.state.password || !this.state.confirmpassword || (this.state.password !== this.state.confirmpassword)} />
                 <p>Already a user?  <Link to="/login"><strong>Login</strong></Link></p>

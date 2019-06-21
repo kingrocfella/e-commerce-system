@@ -21,11 +21,11 @@ const Productcard = ({ products, handleHover, hoveredItem, handleAddToCart, hand
   let DisplayProducts = (products) ? (
     products.map(product => {
       return (
-        <div key={product.product_id} className={`col spacedRow s4${(product.product_id === hoveredItem) ? ' add-overlay' : ''}`} onMouseEnter={() => { handleHover(product.product_id); getAttributes(product.product_id) }}>
+        <div key={product.product_id} className={`col spacedRow s4${(product.product_id === hoveredItem) ? ' add-overlay' : ''}`} onMouseEnter={() => { handleHover(product.product_id) }}>
           <div className="card-image">
             <img src={bg} height="200" width="50" alt="product" />
           </div>
-          <div className="row">
+          <div className="row" onClick={() => {getAttributes(product.product_id) }}>
             <div className="col s6">
               <Select options={attributesName} onChange={(opt) => {handleSelectNameChange(opt.value)}} />
             </div>
@@ -41,7 +41,7 @@ const Productcard = ({ products, handleHover, hoveredItem, handleAddToCart, hand
                 ? <div>
                   <FontAwesomeIcon icon={faInfoCircle} onClick={() => { handleInfoClick(product.product_id) }} title="Click to view details" />
                   <button className="styledButton" style={{ marginLeft: `70%` }} onClick={() => { handleAddToCart(product.product_id) }}>
-                    <FontAwesomeIcon icon={faCartPlus} />
+                    <FontAwesomeIcon icon={faCartPlus} title="Add to cart" />
                   </button>
                 </div>
                 : <button className="emptyButton" style={{ marginLeft: `70%` }}><FontAwesomeIcon icon={faCartPlus} /></button>

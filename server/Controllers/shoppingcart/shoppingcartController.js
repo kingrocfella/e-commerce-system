@@ -32,8 +32,8 @@ module.exports = {
     let query = "call shopping_cart_add_product(?,?,?)";
     connection.query(query, [cart_id, product_id, attributes], (err, rows) => {
       if (err) return res.status(500).send(errorHandler(err));
+      helperFunction.getProductsInCart(res, cart_id);
     });
-    helperFunction.getProductsInCart(res, cart_id);
   },
   getProductsFromCart(req,res){
     if (!req.params.cart_id) return res.status(500).send(errorHandler({code: "USR_02", sqlMessage: "The field cart_id is empty."}));

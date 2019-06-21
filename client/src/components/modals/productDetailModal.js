@@ -36,7 +36,7 @@ const ProductDetailModal = ({ detail, show, hide }) => {
               <tr>
                 <td><strong>Price</strong></td>
                 <td></td>
-                <td>{price}</td>
+                <td>${price}</td>
               </tr>
             </tbody>
           </table>
