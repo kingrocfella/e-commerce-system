@@ -9,6 +9,8 @@ import addtocartAction from '../../../store/actions/addtocartAction';
 import ProductDetailModal from '../../modals/productDetailModal';
 import LoginModal from '../../modals/loginModal';
 import ErrorModal from '../../modals/errorModal';
+import { withRouter } from 'react-router';
+import queryString from 'query-string';
 
 class ProductItems extends Component {
 
@@ -16,8 +18,8 @@ class ProductItems extends Component {
     currentBox: null,
     showModal: false,
     productDetail: "",
-    selectValue: "",
-    selectName: "",
+    selectSize: "",
+    selectColor: "",
     attributesList: [],
     email: "",
     password: "",
@@ -34,19 +36,16 @@ class ProductItems extends Component {
 
   componentDidUpdate(prevProps) {
     let { PageStates } = prevProps;
-    let { page, deptID, catID, search } = PageStates;
-    let prev = [page, deptID, catID, search];
-    for (let key in this.props.PageStates) {
-      if (key === 'deptID') deptID = this.props.PageStates[key];
-      if (key === 'catID') catID = this.props.PageStates[key];
-      if (key === 'search') search = this.props.PageStates[key];
-    }
+    let { page, search } = PageStates;
+    let prev = [page, search];
     if (this.props.pageNum !== prev[0]) {
-      this.handlePageChange(this.props.pageNum, deptID, catID, search, prev);
+      this.handlePageChange(this.props.pageNum,search);
     }
   }
 
-  handlePageChange = (page, deptID, catID, search) => {
+  handlePageChange = (page, search) => {
+    const currentParsed = queryString.parse(this.props.location.search);
+    let { department,category } = currentParsed;
     try {
       if (search) {
         let payload = {
@@ -59,9 +58,9 @@ class ProductItems extends Component {
             this.props.getProducts(res.data);
           })
       }
-      else if (catID) {
+      else if (category) {
         let payload = {
-          id: catID,
+          id: category,
           page: page,
           desc_length: 35
         }
@@ -70,9 +69,9 @@ class ProductItems extends Component {
             this.props.getProducts(res.data)
           })
       }
-      else if (deptID) {
+      else if (department) {
         let payload = {
-          id: deptID,
+          id: department,
           page: page,
           desc_length: 35
         }
@@ -86,9 +85,9 @@ class ProductItems extends Component {
           desc_length: 35
         }
         apiService.getAllProducts(payload)
-          .then(res => {
-            this.props.getProducts(res.data);
-          })
+        .then(res => {
+          this.props.getProducts(res.data)
+        });
       }
     } catch (error) {
       console.log(error)
@@ -104,8 +103,8 @@ class ProductItems extends Component {
   }
 
   handleAddToCart = (id) => {
-    if(!(this.state.selectName && this.state.selectValue)){
-      return this.setState({showErrorModal: "Please select both attribute name and value!"});
+    if(!(this.state.selectColor && this.state.selectSize)){
+      return this.setState({showErrorModal: "Please select both attribute color and size!"});
     } 
     let token = localStorage.getItem("token");
     this.setState({ product_id: id });
@@ -113,13 +112,14 @@ class ProductItems extends Component {
       let payload = {
         cart_id: localStorage.getItem("cart_id"),
         product_id: id,
-        attributes: `${this.state.selectName} ${this.state.selectValue}`,
+        attributes: `${this.state.selectColor} ${this.state.selectSize}`,
         quantity: 1,
         token
       }
       apiService.addToCart(payload)
         .then(res => {
           this.props.addtocart(res.data.length);
+          this.setState({selectColor: "", selectSize:""});
         })
         .catch(err => {
           this.setState({ showErrorModal: "An error occured while adding product to cart!" });
@@ -152,12 +152,12 @@ class ProductItems extends Component {
     this.setState({ showErrorModal: false })
   }
 
-  handleSelectNameChange = name => {
-    this.setState({ selectName: name })
+  handleSelectColorChange = color => {
+    this.setState({ selectColor: color })
   }
 
-  handleSelectValueChange = value => {
-    this.setState({ selectValue: value })
+  handleSelectSizeChange = size => {
+    this.setState({ selectSize: size })
   }
 
   getAttributes = id => {
@@ -193,7 +193,7 @@ class ProductItems extends Component {
             let payload = {
               cart_id: localStorage.getItem("cart_id"),
               product_id: this.state.product_id,
-              attributes: `${this.state.selectName} ${this.state.selectValue}`,
+              attributes: `${this.state.selectColor} ${this.state.selectSize}`,
               quantity: 1,
               token: localStorage.getItem("token")
             }
@@ -234,7 +234,7 @@ class ProductItems extends Component {
         <LoginModal handleSubmit={this.handleSubmit} handleLoginChange={this.handleLoginChange} show={this.state.showLoginModal} hide={this.closeLogin} error={this.state.error} />
         <ProductDetailModal detail={this.state.productDetail} show={this.state.showModal} hide={this.close} />
         <div onMouseLeave={this.handleMouseLeave}>
-          <ProductCard hoveredItem={currentBox} products={productsArray} handleHover={this.handleHover} handleAddToCart={this.handleAddToCart} handleInfoClick={this.handleInfoClick} handleSelectNameChange={this.handleSelectNameChange} handleSelectValueChange={this.handleSelectValueChange} getAttributes={this.getAttributes} attributesList={this.state.attributesList} />
+          <ProductCard hoveredItem={currentBox} products={productsArray} handleHover={this.handleHover} handleAddToCart={this.handleAddToCart} handleInfoClick={this.handleInfoClick} handleSelectColorChange={this.handleSelectColorChange} handleSelectSizeChange={this.handleSelectSizeChange} getAttributes={this.getAttributes} attributesList={this.state.attributesList} />
         </div>
       </div>
     );
@@ -252,4 +252,4 @@ const mapStateToProps = (state) => ({
   products: state.products
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductItems);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductItems));

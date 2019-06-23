@@ -4,7 +4,7 @@ const textbox = ({ id, placeholder, type, onChangeMethod, className, label, valu
   return (
     <div className={className}>
       {/* <label htmlFor={id}>{label}</label> */}
-      <input type={type} id={id} onChange={onChangeMethod} value={value} placeholder={placeholder}/>
+      <input type={type} id={id} onChange={onChangeMethod} value={value} placeholder={placeholder} required/>
     </div>
   );
 }

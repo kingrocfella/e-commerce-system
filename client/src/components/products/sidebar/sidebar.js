@@ -6,19 +6,18 @@ import getCategoriesAction from '../../../store/actions/getCategoriesAction';
 import getProductsAction from '../../../store/actions/getProductsAction';
 import { connect } from 'react-redux';
 import apiService from '../../../services/apiroutes';
+import queryString from 'query-string';
+import { withRouter } from 'react-router';
 
 class SideBar extends Component {
   state = {
     showCategories: false,
     currentUrl: "",
-    searchBox: "",
-    deptID: "",
-    catID: ""
+    searchBox: ""
   }
 
   handleClick = (id, url) => {
     this.props.handleDeptPage(id);
-    this.setState({ deptID: id });
     let payload = {
       id,
       page: 1,
@@ -41,8 +40,8 @@ class SideBar extends Component {
   }
 
   handleCategoryClick = id => {
+    if(!id) return;
     this.props.handleCatPage(id);
-    this.setState({ catID: id })
     let payload = {
       id,
       page: 1,
@@ -57,20 +56,28 @@ class SideBar extends Component {
       })
   }
 
+  componentDidUpdate(prevProps) {
+    const currentParsed = queryString.parse(this.props.location.search);
+    const previousParsed = queryString.parse(prevProps.location.search);
+
+    const { category: currentCategory, department: currentDepartment } = currentParsed;
+    const { category: previousCategory, department: previousDepartment } = previousParsed;
+
+    if (currentCategory !== previousCategory || currentDepartment !== previousDepartment) {
+      this.handleCategoryClick(currentParsed.category);
+    }
+  }
+
   componentDidMount() {
+    const currentParsed = queryString.parse(this.props.location.search);
+    this.getDepartmentsData();
+    if (currentParsed.category) this.handleCategoryClick(currentParsed.category);
+  }
+
+  getDepartmentsData() {
     apiService.getDepartments()
       .then(res => {
         this.props.getAllDepartments(res.data);
-        let { deptID } = this.state;
-        if (deptID) {
-          apiService.getCategories(deptID)
-            .then(res => {
-              this.props.getCategories(res.data)
-              this.setState({
-                showCategories: true
-              });
-            })
-        }
       })
       .catch(err => {
         console.log(err);
@@ -102,22 +109,13 @@ class SideBar extends Component {
   }
 
   resetProducts = () => {
-    let { deptID, catID, search } = this.state
+    console.log("lll")
+    const currentParsed = queryString.parse(this.props.location.search);
+    let { department, category } = currentParsed;
     try {
-      if (search) {
+      if (category) {
         let payload = {
-          page: 1,
-          desc_length: 35,
-          query_string: search
-        }
-        apiService.searchProducts(payload)
-          .then(res => {
-            this.props.getProducts(res.data);
-          })
-      }
-      else if (catID) {
-        let payload = {
-          id: catID,
+          id: category,
           page: 1,
           desc_length: 35
         }
@@ -126,14 +124,14 @@ class SideBar extends Component {
             this.props.getProducts(res.data)
           })
       }
-      else if (deptID) {
+      else if (department) {
         let payload = {
-          id: deptID,
+          id: department,
           page: 1,
           desc_length: 35
         }
         Promise.all([
-          apiService.getCategories(deptID),
+          apiService.getCategories(department),
           apiService.getProductsByDeptID(payload)
         ]).then(([resCat, resProd]) => {
           this.props.getProducts(resProd.data)
@@ -144,7 +142,14 @@ class SideBar extends Component {
         })
       }
       else {
-        this.props.history.push("/products")
+        let payload = {
+          page: 1,
+          desc_length: 35
+        }
+        apiService.getAllProducts(payload)
+        .then(res => {
+          this.props.getProducts(res.data)
+        });
       }
     } catch (error) {
       console.log(error)
@@ -198,4 +203,4 @@ const mapStateToProps = (state) => ({
   categories: state.categories
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideBar);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SideBar));

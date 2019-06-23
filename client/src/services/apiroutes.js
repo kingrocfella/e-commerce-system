@@ -122,6 +122,20 @@ export default {
       method: 'get',
       url: `${baseURL}/shipping/regions/${id}` 
     });
+  },
+  getAllTaxes(){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/tax` 
+    });
+  },
+  createNewOrder(payload){
+    return axios({
+      method: 'post',
+      url: `${baseURL}/orders`,
+      data: payload,
+      headers: { 'USER-KEY': payload['token'] }
+    });
   }
 
 }

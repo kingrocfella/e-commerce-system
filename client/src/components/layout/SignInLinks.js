@@ -17,7 +17,7 @@ class SignedInLinks extends Component {
   }
 
   render() {
-    let { addtocart } = this.props.addtocart
+    let { addtocart } = this.props.addtocart;
     if (!addtocart) addtocart = localStorage.getItem("cart_items");
     let name = localStorage.getItem("name");
     return (
@@ -28,7 +28,7 @@ class SignedInLinks extends Component {
         <ul id='dropdown1' className='dropdown-content'>
           <li><p className="center">Profile</p></li>
           <li className="divider" tabIndex="-1"></li>
-          <li><NavLink to="/user/profile">View/Edit Profile</NavLink></li>
+          <li><NavLink to="/user/profile">Edit Profile</NavLink></li>
         </ul>
       </ul>
     );

@@ -56,7 +56,7 @@ class UserProfile extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="col s12 m12">
+          <div className="col s12 m12 l12">
             <div className="card">
               <div className="card-content">
                 <span className="card-title center"><strong>Edit User Profile</strong></span>
@@ -80,8 +80,11 @@ class UserProfile extends Component {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="input-field col s6 offset-s3">
+                    <div className="input-field col s6">
                       <Textbox id="mobile_phone" type="text" className="input-field" label="Mobile Phone" onChangeMethod={this.handleChange} value={this.state.mob_phone || ''} placeholder="Mob Phone" />
+                    </div>
+                    <div className="input-field col s6">
+                      <Textbox id="password" type="password" className="input-field" label="Password" onChangeMethod={this.handleChange}  placeholder="New Password" />
                     </div>
                   </div>
                   <div className="row">
@@ -90,7 +93,7 @@ class UserProfile extends Component {
                     </div>
                   </div>
                 </form>
-
+                .
               </div>
             </div>
           </div>

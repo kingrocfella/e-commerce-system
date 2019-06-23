@@ -46,12 +46,12 @@ class Products extends Component {
     let renderPage = (this.props.departments) ?
       <div>
         <div className="row">
-          <div className="col s6 offset-s5">
+          <div className="col s12 m6 l6 offset-m5 offset-l5">
             {pagination}
           </div>
         </div>
         <div className="row">
-          <div className="col s2">
+          <div className="col s12 m2 l2">
             <SideBar handleDeptPage={this.handleDeptPage} handleCatPage={this.handleCatPage} handleSearchTerm={this.handleSearchTerm} />
           </div>
           <div className="col s10">
