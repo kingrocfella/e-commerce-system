@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Node js server for DB connections",
   "main": "app.js",
-  "scripts": {},
+  "scripts": {
+    "start": "node app.js"
+  },
   "author": "Kingsley",
   "license": "MIT",
   "dependencies": {
