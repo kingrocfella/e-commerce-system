@@ -1,16 +1,6 @@
 
 module.exports = ({ code, sqlMessage }) => {
   switch (code) {
-    case ("CAT_01"):
-      return {
-        "error": {
-          "status": 500,
-          "code": "CAT_01",
-          "message": "No category exists with this ID.",
-          "field": ""
-        }
-      }
-
     case ("USR_02"):
       return {
         "error": {
@@ -24,7 +14,7 @@ module.exports = ({ code, sqlMessage }) => {
     default: return {
       "error": {
         "status": 500,
-        "code": "CAT_01",
+        "code": "ATR_01",
         "message": sqlMessage,
         "field": ""
       }

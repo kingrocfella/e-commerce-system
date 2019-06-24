@@ -11,20 +11,11 @@ module.exports = ({ code, sqlMessage }) => {
           "field": ""
         }
       }
-    case ("CAT_01"):
-      return {
-        "error": {
-          "status": 500,
-          "code": code,
-          "message": sqlMessage,
-          "field": ""
-        }
-      }
 
     default: return {
       "error": {
         "status": 500,
-        "code": "CAT_01",
+        "code": "PD_01",
         "message": sqlMessage,
         "field": ""
       }

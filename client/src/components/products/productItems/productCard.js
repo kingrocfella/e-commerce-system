@@ -34,10 +34,10 @@ const Productcard = ({ products, handleHover, hoveredItem, handleAddToCart, hand
             <img src={bg} height="200" width="50" alt="product" />
           </div>
           <div className="row" onClick={() => { getAttributes(product.product_id) }}>
-            <div className="col s6">
+            <div className="col s6 m6 l6">
               <Select options={attributesColor} onChange={(opt) => { handleSelectColorChange(opt.value) }} />
             </div>
-            <div className="col s6">
+            <div className="col s6 m6 l6">
               <Select options={attributesSize} onChange={(opt) => { handleSelectSizeChange(opt.value) }} />
             </div>
           </div>  
