@@ -3,7 +3,7 @@ import Textbox from '../formComponents/textbox';
 import Button from '../formComponents/buttons';
 import FormHeader from '../formComponents/formHeader';
 import Alert from '../formComponents/alert';
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import apiService from '../../services/apiroutes';
 import { connect } from 'react-redux';
 import authAction from '../../store/actions/authAction';
@@ -52,7 +52,6 @@ class SignUp extends Component {
   }
 
   render() {
-    if (this.props.authData.isUserLoggedIn) return <Redirect to="/shopmate/products" />
     let { error } = this.state;
     return (
       <div className="container">
