@@ -18,7 +18,7 @@ const LoginModal = ({ show, hide, handleLoginChange, handleSubmit, error }) => {
             <Textbox id="email" placeholder="Enter Email" type="email" onChangeMethod={handleLoginChange} className="input-field" label="Email" />
             <Textbox id="password" placeholder="Enter Password" type="password" onChangeMethod={handleLoginChange} className="input-field" label="Password" />
             <Button btnClassName="btn btn-primary center" btnName="LOGIN" />
-            <p className="center">Not a registered user?  <Link to="/signup"><strong>Sign Up</strong></Link></p>
+            <p className="center">Not a registered user?  <Link to="/shopmate/signup"><strong>Sign Up</strong></Link></p>
           </form>
         </div>
         <button onClick={hide} className="w3-button w3-black w3-display-bottomright">CLOSE</button>

@@ -26,7 +26,8 @@ class ProductItems extends Component {
     error: "",
     showLoginModal: "",
     product_id: "",
-    showErrorModal: ""
+    showErrorModal: "",
+    value:""
   }
 
   componentDidMount() {

@@ -17,7 +17,7 @@ class Navbar extends Component {
     return (
       <nav>
         <div className="nav-wrapper container topnav">
-          <Link to="/products" className="brand-logo">SHOPMATE</Link>
+          <Link to="/shopmate/products" className="brand-logo">SHOPMATE</Link>
           {Links}
         </div>
       </nav>

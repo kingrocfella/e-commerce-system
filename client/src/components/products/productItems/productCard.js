@@ -1,46 +1,28 @@
 import React from 'react';
-import bg from '../../../img/bg.jpg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
-import Select from 'react-select';
+import { DropdownList } from 'react-widgets'
 
 const Productcard = ({ products, handleHover, hoveredItem, handleAddToCart, handleInfoClick, handleSelectColorChange, handleSelectSizeChange, getAttributes, attributesList }) => {
-  let attributesSize = [];
-  let attributesColor = [];
-  let Color, Size;
-  for (let i in attributesList) {
-    if (attributesList[i]["attribute_name"] === 'Color') Color = attributesList[i]["attribute_value"];
-    else if (attributesList[i]["attribute_name"] === 'Size') Size = attributesList[i]["attribute_value"];
-    if (Color) {
-      attributesColor.push({
-        label: Color,
-        value: Color
-      });
-      Color = "";
-    }
-    if (Size) {
-      attributesSize.push({
-        label: Size,
-        value: Size
-      });
-    }
-  }
+  const Color = attributesList.filter(attr => attr.attribute_name === "Color").map(item => item.attribute_value);
+  const Size = attributesList.filter(attr => attr.attribute_name === "Size").map(item => item.attribute_value);
+
 
   let DisplayProducts = (products) ? (
     products.map(product => {
       return (
-        <div key={product.product_id} className={`col spacedRow s12 m4 l4${(product.product_id === hoveredItem) ? ' add-overlay' : ''}`} onMouseEnter={() => { handleHover(product.product_id) }}>
-          <div className="card-image">
-            <img src={bg} height="200" width="50" alt="product" />
+        <div key={product.product_id} className={`col card spacedRow s12 m4 l4${(product.product_id === hoveredItem) ? ' add-overlay' : ''}`} onMouseEnter={() => { handleHover(product.product_id) }} >
+          <div className="center">
+            <img src={`http://35.176.170.254/shopmate/img/${product.thumbnail}`} height="150" width="200" alt="product" />
           </div>
-          <div className="row" onClick={() => { getAttributes(product.product_id) }}>
+          <div className="row" onMouseEnter={() => { getAttributes(product.product_id) }}>
             <div className="col s6 m6 l6">
-              <Select options={attributesColor} onChange={(opt) => { handleSelectColorChange(opt.value) }} />
+              <DropdownList data={Color} placeholder="Color"  onChange={value => handleSelectColorChange(value)} />
             </div>
             <div className="col s6 m6 l6">
-              <Select options={attributesSize} onChange={(opt) => { handleSelectSizeChange(opt.value) }} />
+              <DropdownList data={Size} placeholder="Size" onChange={value => handleSelectSizeChange(value)} />
             </div>
-          </div>  
+          </div>
           <span className="card-title">{product.name}</span>
           <div>{product.description}</div><br />
           {
@@ -60,7 +42,7 @@ const Productcard = ({ products, handleHover, hoveredItem, handleAddToCart, hand
 
   return (
     <div>
-      <div className="card" style={{ display: 'block' }}>
+      <div style={{ display: 'block' }}>
         {DisplayProducts}
       </div>
     </div>

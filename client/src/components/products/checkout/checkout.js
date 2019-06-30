@@ -3,22 +3,28 @@ import apiService from '../../../services/apiroutes';
 import addtocartAction from '../../../store/actions/addtocartAction';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
+import Alert from '../../formComponents/alert';
 
 class Checkout extends Component {
   state = {
     products: [],
     error: "",
-    totalAmount: ""
+    totalAmount: "",
+    quantity: "",
+    token: localStorage.getItem("token"),
+    success: false,
+    item_id: "",
+    cart_id: localStorage.getItem("cart_id")
   }
 
   componentDidMount() {
-    let cart_id = localStorage.getItem("cart_id");
+    let { cart_id } = this.state;
     this.getProducts(cart_id);
   }
 
   componentDidUpdate(prevProps) {
     let prevCount;
-    let cart_id = localStorage.getItem("cart_id");
+    let { cart_id } = this.state;
     for (let key in prevProps) {
       if (key === 'getcartitem') prevCount = prevProps[key]['addtocart'];
     }
@@ -54,14 +60,35 @@ class Checkout extends Component {
         this.props.addtocart(String(itemsCount));
       })
       .catch(err => {
-        this.setState({ error: "An error ocurred while removing item." })
+        this.setState({ error: "An error occurred while removing item." })
       });
   }
 
+  reduceQuantity = (quantity, item_id) => {
+    if (quantity === 1) return;
+    quantity--;
+    this.setState({ quantity, item_id });
+  }
 
+  increaseQuantity = (quantity, item_id) => {
+    quantity++;
+    this.setState({ quantity, item_id });
+  }
+
+  updateQuantity = (item_id) => {
+    let { token, quantity, cart_id } = this.state;
+    apiService.updateCart(item_id, quantity, token)
+      .then(res => {
+        this.getProducts(cart_id);
+        this.setState({ success: "Cart successfully updated!", error: false })
+      })
+      .catch(err => {
+        this.setState({ error: "An error occurred while updating cart!", success: false })
+      })
+  }
 
   render() {
-    let { error } = this.state;
+    let { error, success } = this.state;
     let CheckoutItems = (this.state.products) ? (
       this.state.products.map(item => {
         return (
@@ -69,9 +96,11 @@ class Checkout extends Component {
             <td>{item.name}</td>
             <td>{item.attributes}</td>
             <td>${item.price}</td>
-            <td>{item.quantity}</td>
+            <td>{(item.item_id === this.state.item_id && this.state.quantity) ? (this.state.quantity) : item.quantity}</td>
+            <td><button className="btn-floating btn-small waves-effect waves red" onClick={() => { this.reduceQuantity(this.state.quantity || item.quantity, item.item_id) }}>-</button> &nbsp; <button className="btn-floating btn-small waves-effect waves green" onClick={() => { this.increaseQuantity(this.state.quantity || item.quantity, item.item_id) }}>+</button></td>
             <td>${item.subtotal}</td>
-            <td><button className="waves-effect waves-light btn red" onClick={() => { this.deleteProduct(item.item_id) }}>REMOVE</button></td>
+            <td><button className="waves-effect waves btn-small green" onClick={() => { this.updateQuantity(item.item_id) }}>UPDATE</button></td>
+            <td><button className="waves-effect waves btn-small red" onClick={() => { this.deleteProduct(item.item_id) }}>REMOVE</button></td>
           </tr>
         );
       })
@@ -83,22 +112,25 @@ class Checkout extends Component {
             <div className="card">
               <div className="card-content">
                 {(CheckoutItems.length > 0) ? <span className="card-title center">Product Cart Checkout</span> : null}
-                {(error) ? <span style={{ color: 'red' }}>{error}</span> : null}
+                {error ? <Alert componentclassName="red-text text-darken-1 center" alert={error} /> : null}
+                {success ? <Alert componentclassName="green-text text-darken-1 center" alert={success} /> : null}
                 <div>
                   {
                     (CheckoutItems.length > 0) ?
-                      <table className="highlight centered responsive-table">
+                      <table className="striped centered responsive-table">
                         <thead>
                           <tr>
-                            <th></th><th></th><th></th><th></th><th></th>
-                            <th><Link to="/products/orders" className="waves-effect waves-light btn green">PROCEED TO ORDER</Link></th>
+                            <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                            <th><Link to="/shopmate/products/orders" className="waves-effect waves-light btn green">PROCEED</Link></th>
                           </tr>
                           <tr>
                             <th>Name</th>
                             <th>Attribute</th>
                             <th>Price</th>
                             <th>Quantity</th>
+                            <th>Update Quantity</th>
                             <th>Subtotal</th>
+                            <th>Update Cart</th>
                             <th>Remove Item</th>
                           </tr>
                         </thead>
@@ -107,9 +139,13 @@ class Checkout extends Component {
                           <tr>
                             <th></th>
                             <th></th>
+                            <th></th><th></th>
                             <th><strong>Total Amount</strong></th>
                             <th>${this.state.totalAmount}</th>
-                            <th></th>
+                          </tr>
+                          <tr>
+                            <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                            <th><Link to="/shopmate/products"><i>Continue Shopping?</i></Link></th>
                           </tr>
                         </tbody>
                       </table> :

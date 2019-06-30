@@ -40,7 +40,7 @@ class SignIn extends Component {
               let { cart_id } = res.data;
               localStorage.setItem("cart_id", cart_id);
               //redirect to products page if logged in
-              this.props.history.push("/products");
+              this.props.history.push("/shopmate/products");
             })
         }
       })
@@ -53,7 +53,7 @@ class SignIn extends Component {
   }
 
   render() {
-    if (this.props.authData.isUserLoggedIn) return <Redirect to="/products" />
+    if (this.props.authData.isUserLoggedIn) return <Redirect to="/shopmate/products" />
     let { error } = this.state;
     return (
       <div className="container">
@@ -67,7 +67,7 @@ class SignIn extends Component {
               <Textbox id="password" type="password" onChangeMethod={this.handleChange} className="input-field" label="Password" placeholder="Password" />
               <div className="center-align">
                 <Button btnClassName="btn btn-primary" btnName="LOGIN" disabled={!this.state.email || !this.state.password} />
-                <p>Not a registered user?  <Link to="/signup"><strong>Sign Up</strong></Link></p>
+                <p>Not a registered user?  <Link to="/shopmate/signup"><strong>Sign Up</strong></Link></p>
               </div>
             </form>
           </div>

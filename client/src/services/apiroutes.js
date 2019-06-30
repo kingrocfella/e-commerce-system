@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = "http://localhost:5000"
+const baseURL = "http://165.227.237.210/api"
 
 export default {
   login(payload) {
@@ -135,6 +135,14 @@ export default {
       url: `${baseURL}/orders`,
       data: payload,
       headers: { 'USER-KEY': payload['token'] }
+    });
+  },
+  updateCart(item_id, quantity,token){
+    return axios({
+      method: 'put',
+      url: `${baseURL}/shoppingcart/update/${item_id}`,
+      data: {quantity},
+      headers: { 'USER-KEY': token }
     });
   }
 

@@ -7,7 +7,7 @@ export default function (ComposedComponent) {
     componentDidMount() {
       const { isAuthenticated } = this.props;
       if (!isAuthenticated) {
-        this.props.history.push("/login");
+        this.props.history.push("/shopmate/login");
       }
     }
 

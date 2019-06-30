@@ -16,12 +16,12 @@ class App extends Component {
         <div className="App">
           <Navbar />
           <Switch>
-            <Route exact path="/products" component= {Products} />
-            <Route exact path="/login" component= {SignIn} />
-            <Route path="/signup" component= {SignUp} />
-            <Route exact path="/products/checkout" component= {requireAuth(Checkout)} />
-            <Route exact path="/user/profile" component= {requireAuth(UserProfile)} />
-            <Route exact path="/products/orders" component= {requireAuth(Orders)} />
+            <Route exact path="/shopmate/products" component= {Products} />
+            <Route exact path="/shopmate/login" component= {SignIn} />
+            <Route path="/shopmate/signup" component= {SignUp} />
+            <Route exact path="/shopmate/products/checkout" component= {requireAuth(Checkout)} />
+            <Route exact path="/shopmate/user/profile" component= {requireAuth(UserProfile)} />
+            <Route exact path="/shopmate/products/orders" component= {requireAuth(Orders)} />
           </Switch>
         </div>
       </BrowserRouter>

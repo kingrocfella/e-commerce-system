@@ -13,7 +13,7 @@ class SignedInLinks extends Component {
 
   handleClick = () => {
     removeState();
-    this.props.history.push("/login");
+    this.props.history.push("/shopmate/login");
   }
 
   render() {
@@ -22,13 +22,13 @@ class SignedInLinks extends Component {
     let name = localStorage.getItem("name");
     return (
       <ul id="nav-mobile" className="right hide-on-med-and-down">
-        <li><NavLink to="/products/checkout"><FaShoppingCart /><span className="badgeNum">{addtocart}</span></NavLink></li>
-        <li><NavLink to="/login" onClick={this.handleClick}>Log Out</NavLink></li>
+        <li><NavLink to="/shopmate/products/checkout"><FaShoppingCart /><span className="badgeNum">{addtocart}</span></NavLink></li>
+        <li><NavLink to="/shopmate/login" onClick={this.handleClick}>Log Out</NavLink></li>
         <li><div data-target='dropdown1' className='dropdown-trigger'>{name} <FaAngleDown /></div></li>
         <ul id='dropdown1' className='dropdown-content'>
           <li><p className="center">Profile</p></li>
           <li className="divider" tabIndex="-1"></li>
-          <li><NavLink to="/user/profile">Edit Profile</NavLink></li>
+          <li><NavLink to="/shopmate/user/profile">Edit Profile</NavLink></li>
         </ul>
       </ul>
     );

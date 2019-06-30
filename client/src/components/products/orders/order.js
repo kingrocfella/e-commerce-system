@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import apiService from '../../../services/apiroutes';
-import Select from 'react-select';
+import { DropdownList } from 'react-widgets';
 import Alert from '../../formComponents/alert';
 import Textbox from '../../formComponents/textbox';
 
 class Orders extends Component {
   state = {
-    shipping_region_details: "",
-    tax_details: "",
+    shipping_region_details: [],
+    tax_details: [],
     shipping_region_id: "",
-    selected_shipping_region: "",
+    selected_shipping_region: [],
     cart_id: localStorage.getItem("cart_id"),
     shipping_id: "",
     token: localStorage.getItem("token"),
@@ -66,40 +66,6 @@ class Orders extends Component {
 
   render() {
     let { shipping_region_details, selected_shipping_region, tax_details } = this.state;
-    let formatedShippingDetails = [];
-    let selectedShippingDetails = [];
-    let formatedTaxDetails = [];
-    let label, value;
-
-    for (let key in shipping_region_details) {
-      for (let item in shipping_region_details[key]) {
-        if (item === 'shipping_region') label = shipping_region_details[key][item];
-        if (item === 'shipping_region_id') value = shipping_region_details[key][item];
-      }
-      formatedShippingDetails.push({
-        label, value
-      });
-    }
-
-    for (let key in selected_shipping_region) {
-      for (let item in selected_shipping_region[key]) {
-        if (item === 'shipping_type') label = selected_shipping_region[key][item];
-        if (item === 'shipping_id') value = selected_shipping_region[key][item];
-      }
-      selectedShippingDetails.push({
-        label, value
-      });
-    }
-
-    for (let key in tax_details) {
-      for (let item in tax_details[key]) {
-        if (item === 'tax_type') label = tax_details[key][item];
-        if (item === 'tax_id') value = tax_details[key][item];
-      }
-      formatedTaxDetails.push({
-        label, value
-      });
-    }
     let { error, success } = this.state;
     return (
       <div className="container">
@@ -108,27 +74,26 @@ class Orders extends Component {
             <div className="card-content">
               <span className="card-title center"><strong>Create New Order</strong></span>
               {error ? <Alert componentclassName="red-text text-darken-1 center" alert={error} /> : null}
-              {success ? 
-              <div>
-                <Alert componentclassName="green-text text-darken-1 center" alert={success} /> 
-              </div>: null}
+              {success ? <Alert componentclassName="green-text text-darken-1 center" alert={success} /> : null}
             </div>
           </div>
-          <div className="col s3 m3">
+          <div className="col s6 m6 l6">
             <p><strong>Region:</strong></p>
-            <Select options={formatedShippingDetails} onChange={(opt) => { this.handleShippingDetailsChange(opt.value) }} />
+            <DropdownList data={shipping_region_details} valueField='shipping_region_id' textField='shipping_region' placeholder="Select Region" onChange={value => this.handleShippingDetailsChange(value.shipping_region_id)} />
           </div>
-          <div className="col s3 m3">
-            {(selectedShippingDetails.length > 0) ? <p><strong>Delivery Plan:</strong></p> : null}
-            {(selectedShippingDetails.length > 0) ? <Select options={selectedShippingDetails} onChange={(opt) => { this.handleSelectedDetailsChange(opt.value) }} /> : null}
+          <div className="col s6 m6 l6">
+            {(selected_shipping_region.length > 0) ? <p><strong>Delivery Plan:</strong></p> : null}
+            {(selected_shipping_region.length > 0) ? <DropdownList data={selected_shipping_region} valueField='shipping_region_id' textField='shipping_type' placeholder="Select Plan" onChange={value => this.handleSelectedDetailsChange(value.shipping_region_id)} /> : null}
           </div>
-          <div className="col s3 m3">
-            {(formatedTaxDetails.length > 0) ? <p><strong>Credit Card:</strong></p> : null}
-            {(formatedTaxDetails.length > 0) ? <Textbox id="credit_card" type="text" className="input-field" label="Credit Card" onChangeMethod={this.handleCreditCardChange} value={this.state.credit_card || ''} placeholder="Credit Card" /> : null}
+        </div>
+        <div className="row">
+        <div className="col s6 m6 l6">
+            {(tax_details.length > 0) ? <p><strong>Credit Card:</strong></p> : null}
+            {(tax_details.length > 0) ? <Textbox id="credit_card" type="text" className="input-field" label="Credit Card" onChangeMethod={this.handleCreditCardChange} value={this.state.credit_card || ''} placeholder="Credit Card" /> : null}
           </div>
-          <div className="col s3 m3">
-            {(formatedTaxDetails.length > 0) ? <p><strong>Tax Plan:</strong></p> : null}
-            {(formatedTaxDetails.length > 0) ? <Select options={formatedTaxDetails} onChange={(opt) => { this.handleSelectedTaxChange(opt.value) }} /> : null}
+          <div className="col s6 m6 l6">
+            {(tax_details.length > 0) ? <p><strong>Tax Plan:</strong></p> : null}
+            {(tax_details.length > 0) ? <DropdownList data={tax_details} valueField='tax_id' textField='tax_type' placeholder="Select Tax Plan" onChange={value => this.handleSelectedTaxChange(value.tax_id)} /> : null}
           </div>
         </div>
       </div>
