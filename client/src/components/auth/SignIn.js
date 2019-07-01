@@ -42,6 +42,8 @@ class SignIn extends Component {
               //redirect to products page if logged in
               this.props.history.push("/shopmate/products");
             })
+        } else{
+          this.props.history.push("/shopmate/products");
         }
       })
       .catch(err => {

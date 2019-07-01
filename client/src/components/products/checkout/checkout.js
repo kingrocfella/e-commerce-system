@@ -80,11 +80,15 @@ class Checkout extends Component {
     apiService.updateCart(item_id, quantity, token)
       .then(res => {
         this.getProducts(cart_id);
-        this.setState({ success: "Cart successfully updated!", error: false })
+        this.setState({ success: "Cart successfully updated!", error: false, quantity: "" });
       })
       .catch(err => {
-        this.setState({ error: "An error occurred while updating cart!", success: false })
+        this.setState({ error: "An error occurred while updating cart!", success: false, quantity: "" });
       })
+  }
+
+  resetState = () => {
+    this.setState({quantity: ""});
   }
 
   render() {
@@ -97,7 +101,7 @@ class Checkout extends Component {
             <td>{item.attributes}</td>
             <td>${item.price}</td>
             <td>{(item.item_id === this.state.item_id && this.state.quantity) ? (this.state.quantity) : item.quantity}</td>
-            <td><button className="btn-floating btn-small waves-effect waves red" onClick={() => { this.reduceQuantity(this.state.quantity || item.quantity, item.item_id) }}>-</button> &nbsp; <button className="btn-floating btn-small waves-effect waves green" onClick={() => { this.increaseQuantity(this.state.quantity || item.quantity, item.item_id) }}>+</button></td>
+            <td onMouseEnter={this.resetState}><button className="btn-floating btn-small waves-effect waves red" onClick={() => { this.reduceQuantity(this.state.quantity || item.quantity, item.item_id) }}>-</button> &nbsp; <button className="btn-floating btn-small waves-effect waves green" onClick={() => { this.increaseQuantity(this.state.quantity || item.quantity, item.item_id) }}>+</button></td>
             <td>${item.subtotal}</td>
             <td><button className="waves-effect waves btn-small green" onClick={() => { this.updateQuantity(item.item_id) }}>UPDATE</button></td>
             <td><button className="waves-effect waves btn-small red" onClick={() => { this.deleteProduct(item.item_id) }}>REMOVE</button></td>
