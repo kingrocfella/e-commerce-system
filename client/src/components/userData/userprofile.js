@@ -81,7 +81,7 @@ class UserProfile extends Component {
                   </div>
                   <div className="row">
                     <div className="input-field col s6">
-                      <Textbox id="mobile_phone" type="text" className="input-field" label="Mobile Phone" onChangeMethod={this.handleChange} value={this.state.mob_phone || ''} placeholder="Mob Phone" />
+                      <Textbox id="mob_phone" type="text" className="input-field" label="Mobile Phone" onChangeMethod={this.handleChange} value={this.state.mob_phone || ''} placeholder="Mob Phone" />
                     </div>
                     <div className="input-field col s6">
                       <Textbox id="password" type="password" className="input-field" label="Password" onChangeMethod={this.handleChange}  placeholder="New Password" />

@@ -123,7 +123,10 @@ class ProductItems extends Component {
           this.setState({selectColor: "", selectSize:""});
         })
         .catch(err => {
-          this.setState({ showErrorModal: "An error occured while adding product to cart!" });
+          if(err.response && (String(err.response.status) === '401' || String(err.response.status) === '403')) {
+            this.setState({ showLoginModal: true })  
+          } 
+          else this.setState({ showErrorModal: "An error occured while adding product to cart!" });
         })
     } else {
       this.setState({ showLoginModal: true })

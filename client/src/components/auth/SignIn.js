@@ -31,6 +31,12 @@ class SignIn extends Component {
           customer_id: res.data.customer.schema.customer_id,
           token: res.data.accessToken
         }
+        let customer_id = localStorage.getItem("customer_id");
+        if(customer_id !== String(res.data.customer.schema.customer_id)){
+          localStorage.removeItem("customer_id");
+          localStorage.removeItem("cart_id");
+          localStorage.removeItem("cart_items");
+        }
         //push auth details into redux store
         this.props.setAuthData(authData);
         if (!localStorage.getItem("cart_id")) {
