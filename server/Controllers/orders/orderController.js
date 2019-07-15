@@ -31,12 +31,15 @@ module.exports = {
           if (err) return res.status(500).send(errorHandler(err));
           rows.forEach( item => {
             if(item["discounted_price"] !== 0) unit_cost = item["discounted_price"]
-            else unit_cost = item["price"]
+            else unit_cost = item["price"];
             //insert order details in DB
-            connection.query(`INSERT INTO ?? (item_id,order_id,product_id,attributes,product_name,quantity,unit_cost) VALUES (?,?,?,?,?,?,?)`, ['order_detail', item['item_id'], order_id, item['product_id'],item['attributes'],item['name'],item['quantity'],unit_cost], (err, rows) => {
-              if (err) return res.status(500).send(errorHandler(err));
+            try {
+              connection.query(`INSERT INTO ?? (item_id,order_id,product_id,attributes,product_name,quantity,unit_cost) VALUES (?,?,?,?,?,?,?)`, ['order_detail', item['item_id'], order_id, item['product_id'],item['attributes'],item['name'],item['quantity'],unit_cost], (err, rows) => {
+                res.status(200).send({orderId: order_id});
+              });
+            } catch (error) {
               res.status(200).send({orderId: order_id});
-            });
+            }
           });
         });
       });

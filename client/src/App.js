@@ -6,8 +6,9 @@ import SignUp from './components/auth/SignUp'
 import Products from './components/products/products';
 import Checkout from './components/products/checkout/checkout';
 import UserProfile from './components/userData/userprofile';
-import Orders from './components/products/orders/order'
-import requireAuth from './components/hocs/routeguard'
+import Orders from './components/products/orders/order';
+import OrdersHistory from './components/products/orders/orderHistory';
+import requireAuth from './components/hocs/routeguard';
 
 class App extends Component {
   render() {
@@ -22,6 +23,7 @@ class App extends Component {
             <Route exact path="/shopmate/products/checkout" component= {requireAuth(Checkout)} />
             <Route exact path="/shopmate/user/profile" component= {requireAuth(UserProfile)} />
             <Route exact path="/shopmate/products/orders" component= {requireAuth(Orders)} />
+            <Route exact path="/shopmate/orders/history" component= {requireAuth(OrdersHistory)} />
           </Switch>
         </div>
       </BrowserRouter>

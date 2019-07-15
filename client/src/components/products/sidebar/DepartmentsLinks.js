@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
 
-const SidebarLinks = ({ departments, handleClick, props }) => {
+const SidebarLinks = ({ departments, handleClick }) => {
   let Departments = (departments) ?
     (
       departments.map(department => {

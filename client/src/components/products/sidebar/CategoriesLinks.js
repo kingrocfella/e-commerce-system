@@ -7,7 +7,7 @@ const SidebarLinks = ({ categories, handleCategoryClick, currentUrl }) => {
       categories.map(category => {
         let url = `${currentUrl}&category=${category.category_id}`
         return (
-          <NavLink to={url} className="collection-item ci" onClick={() => { handleCategoryClick(category.category_id) }} key={category.category_id}>{category.name}</NavLink>
+          <NavLink to={url} className="collection-item ci catgry" onClick={() => { handleCategoryClick(category.category_id) }} key={category.category_id}>{category.name}</NavLink>
         );
       })
     ) : null;

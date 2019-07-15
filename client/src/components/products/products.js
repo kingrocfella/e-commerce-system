@@ -29,19 +29,19 @@ class Products extends Component {
   render() {
     let { products } = this.props.products;
     let productCount;
-    for(let key in products) if(key=== 'count') productCount = products[key];
-    let pages = Math.ceil(productCount/20);
+    for (let key in products) if (key === 'count') productCount = products[key];
+    let pages = Math.ceil(productCount / 20);
     let pagesArray = [];
     for (let index = 1; index <= pages; index++) {
       pagesArray[index] = index;
     }
     let pagination = (pagesArray) ? (
-      pagesArray.map((page,index) => {
-        return(
+      pagesArray.map((page, index) => {
+        return (
           <div key={index} className="btn-floating center btn-medium waves-effect waves-light red paginationBtn" onClick={() => { this.handleClick(index) }}>{index}</div>
         )
       })
-    ): null;
+    ) : null;
 
     let renderPage = (this.props.departments) ?
       <div>
@@ -54,7 +54,7 @@ class Products extends Component {
           <div className="col s12 m2 l2">
             <SideBar handleDeptPage={this.handleDeptPage} handleCatPage={this.handleCatPage} handleSearchTerm={this.handleSearchTerm} />
           </div>
-          <div className="col s10">
+          <div className="col s12 m10 l10">
             <ProductItems pageNum={this.state.page} PageStates={this.state} />
           </div>
         </div>

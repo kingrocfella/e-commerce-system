@@ -33,6 +33,15 @@ class ProductItems extends Component {
   componentDidMount() {
     let { pageNum } = this.props;
     this.handlePageChange(pageNum);
+    let cartID = localStorage.getItem("cart_id")
+    if (!cartID) {
+      //generate cart_id
+      apiService.generateUniqueCartID()
+      .then(res => {
+        let { cart_id } = res.data;
+        localStorage.setItem("cart_id", cart_id);
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {

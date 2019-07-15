@@ -17,10 +17,10 @@ const Productcard = ({ products, handleHover, hoveredItem, handleAddToCart, hand
           </div>
           <div className="row" onMouseEnter={() => { getAttributes(product.product_id) }}>
             <div className="col s6 m6 l6">
-              <DropdownList data={Color} placeholder="Color"  onChange={value => handleSelectColorChange(value)} />
+              <DropdownList className="color" data={Color} placeholder="Color"  onChange={value => handleSelectColorChange(value)} />
             </div>
-            <div className="col s6 m6 l6">
-              <DropdownList data={Size} placeholder="Size" onChange={value => handleSelectSizeChange(value)} />
+            <div className="col s6 m6 l6 size">
+              <DropdownList className="size" data={Size} placeholder="Size" onChange={value => handleSelectSizeChange(value)} />
             </div>
           </div>
           <span className="card-title">{product.name}</span>

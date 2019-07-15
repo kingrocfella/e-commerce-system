@@ -44,10 +44,6 @@ class Checkout extends Component {
         totalAmount: resTotal.data[0]["total_amount"]
       });
     })
-    apiService.getProductsFromCart(cart_id)
-      .then(res => {
-        this.setState({ products: res.data });
-      });
   }
 
   deleteProduct = (item_id) => {
@@ -96,12 +92,12 @@ class Checkout extends Component {
     let CheckoutItems = (this.state.products) ? (
       this.state.products.map(item => {
         return (
-          <tr key={item.item_id}>
+          <tr key={item.item_id} className="checkoutRows">
             <td>{item.name}</td>
             <td>{item.attributes}</td>
             <td>${item.price}</td>
-            <td>{(item.item_id === this.state.item_id && this.state.quantity) ? (this.state.quantity) : item.quantity}</td>
-            <td onMouseEnter={this.resetState}><button className="btn-floating btn-small waves-effect waves red" onClick={() => { this.reduceQuantity(this.state.quantity || item.quantity, item.item_id) }}>-</button> &nbsp; <button className="btn-floating btn-small waves-effect waves green" onClick={() => { this.increaseQuantity(this.state.quantity || item.quantity, item.item_id) }}>+</button></td>
+            <td className="productQuantity">{(item.item_id === this.state.item_id && this.state.quantity) ? (this.state.quantity) : item.quantity}</td>
+            <td onMouseEnter={this.resetState}><button className="btn-floating btn-small waves-effect waves red reduceQuantity" onClick={() => { this.reduceQuantity(this.state.quantity || item.quantity, item.item_id) }}>-</button> &nbsp; <button className="btn-floating btn-small waves-effect waves green addQuantity" onClick={() => { this.increaseQuantity(this.state.quantity || item.quantity, item.item_id) }}>+</button></td>
             <td>${item.subtotal}</td>
             <td><button className="waves-effect waves btn-small green" onClick={() => { this.updateQuantity(item.item_id) }}>UPDATE</button></td>
             <td><button className="waves-effect waves btn-small red" onClick={() => { this.deleteProduct(item.item_id) }}>REMOVE</button></td>
@@ -125,7 +121,7 @@ class Checkout extends Component {
                         <thead>
                           <tr>
                             <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-                            <th><Link to="/shopmate/products/orders" className="waves-effect waves-light btn green">PROCEED</Link></th>
+                            <th><Link to="/shopmate/products/orders" className="waves-effect waves-light btn green proceedToOrders">PROCEED</Link></th>
                           </tr>
                           <tr>
                             <th>Name</th>
@@ -149,7 +145,7 @@ class Checkout extends Component {
                           </tr>
                           <tr>
                             <th></th><th></th><th></th><th></th><th></th><th></th><th></th>
-                            <th><Link to="/shopmate/products"><i>Continue Shopping?</i></Link></th>
+                            <th><Link to="/shopmate/products" id="continueShopping"><i>Continue Shopping?</i></Link></th>
                           </tr>
                         </tbody>
                       </table> :
@@ -170,7 +166,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addtocart: (product_id) => dispatch(addtocartAction(product_id)),
+  addtocart: (product_id) => dispatch(addtocartAction(product_id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

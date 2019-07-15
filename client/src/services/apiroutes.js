@@ -1,5 +1,6 @@
 import axios from 'axios';
-const baseURL = "http://165.227.237.210/api"
+// const baseURL = "http://165.227.237.210/api"
+const baseURL = "http://localhost:5000"
 
 export default {
   login(payload) {
@@ -142,6 +143,40 @@ export default {
       method: 'put',
       url: `${baseURL}/shoppingcart/update/${item_id}`,
       data: {quantity},
+      headers: { 'USER-KEY': token }
+    });
+  },
+  stripeCharge(payload){
+    return axios({
+      method: 'post',
+      url: `${baseURL}/stripe/charge`,
+      data: payload
+    });
+  },
+  stripeToken(payload){
+    return axios({
+      method: 'post',
+      url: `${baseURL}/stripe/token`,
+      data: payload
+    });
+  },
+  getCustomerOrders(token){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/orders/inCustomer`,
+      headers: { 'USER-KEY': token }
+    });
+  },
+  deleteCart(cart_id){
+    return axios({
+      method: 'delete',
+      url: `${baseURL}/shoppingcart/empty/${cart_id}`
+    });
+  },
+  getOrderDetail(order_id,token){
+    return axios({
+      method: 'get',
+      url: `${baseURL}/orders/${order_id}`,
       headers: { 'USER-KEY': token }
     });
   }

@@ -7,6 +7,7 @@ const attributes = require("./Controllers/attributes/attributesController");
 const orders = require("./Controllers/orders/orderController");
 const tax = require('./Controllers/taxes/taxController');
 const shipping = require('./Controllers/shipping/shippingController');
+const stripe = require("./Controllers/stripe/stripeController");
 const verifyToken = require("./middlewares/verifyToken");
 const multer  = require('multer');
 const upload = multer();
@@ -214,6 +215,18 @@ module.exports = (app) => {
   //get shipping regions by ID
   app.get("/shipping/regions/:shipping_region_id",(req,res) => {
     shipping.getShippingRegionsByID(req,res);
+  });
+
+
+  //----------------------- STRIPE APIS -----------------------------------------------------------------------
+  
+  //create stripe token
+  app.post("/stripe/token", (req,res) => {
+    stripe.createStrikeToken(req,res);
+  });
+  //create a stripe charge
+  app.post("/stripe/charge", upload.none(), (req,res) => {
+    stripe.stripeCharge(req,res);
   });
 
 }
